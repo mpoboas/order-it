@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { OrderService } from 'src/app/services/order.service';
 
@@ -8,7 +9,7 @@ import { OrderService } from 'src/app/services/order.service';
   styles: [
   ]
 })
-export class CreateOrderComponent {
+export class CreateOrderComponent implements OnInit {
   orderData: any = {
     orderNumber: this.generateOrderNumber(),
     orderNote: '',
@@ -24,18 +25,38 @@ export class CreateOrderComponent {
     itemPrice: ''
   };
 
-  constructor(public ref: DynamicDialogRef, private orderService: OrderService) {}
+  constructor(public ref: DynamicDialogRef, private messageService: MessageService, private orderService: OrderService) {}
 
+  ngOnInit(): void {
+    // Get the responsibleName from localStorage and set it to the orderData
+    let storedValue = localStorage.getItem('responsibleName');
+    this.orderData.responsibleName = storedValue ? JSON.parse(storedValue).name : '';
+    this.addItem();
+  }
+
+  // MOCK | TO BE DELETED
   generateOrderNumber(): number {
-    // Logic to generate a unique order number (you can replace this with your logic)
     return Math.floor(Math.random() * 1000) + 1;
   }
 
   createOrder(): void {
+    // Check if any itemName is null or empty
+    const itemWithoutName = this.orderData.items.find((item: { itemName: any; }) => !item.itemName);
+    const itemWithoutBrand = this.orderData.items.find((item: { itemBrandType: any; }) => !item.itemBrandType);
+    if (itemWithoutName) {
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'O nome do produto não pode estar vazio!' });
+      return;
+    } else if (itemWithoutBrand) {
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: `Seleciona a marca que prentendes do produto: ${itemWithoutBrand.itemName}!` });
+      return;
+    }
+
     // Validate and handle the order creation logic
     // For demonstration purposes, we'll just close the dialog
     this.addOrder();
     this.ref.close();
+    this.messageService.add({ severity: 'success', summary: 'Successo', detail: 'Pedido efetuado com sucesso!' });
+    this.messageService.add({ severity: 'info', summary: 'Info', detail: "Equanto não temos backend, para ver os pedidos criados clica em 'Admin' e depois em 'User' para atualizar a tabela.", life: 7000 });
   }
 
   cancel(): void {
@@ -60,5 +81,13 @@ export class CreateOrderComponent {
   addOrder(): void {
     this.orderService.addOrder(this.orderData);
   }
+
+  isOrderValid(): boolean {
+    const invalidItems = this.orderData.items.some((item: { itemName: any; itemBrandType: any; itemUnitsQuantity: number; }) =>
+        !item.itemName || !item.itemBrandType || item.itemUnitsQuantity < 1
+    );
+
+    return !invalidItems;
+}
 
 }

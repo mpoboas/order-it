@@ -23,6 +23,10 @@ import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -48,8 +52,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
     RadioButtonModule,
     InputTextModule,
     InputNumberModule,
+    ToastModule,
+    DialogModule,
   ],
-  providers: [DialogService, OrderService],
+  providers: [DialogService, MessageService, OrderService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

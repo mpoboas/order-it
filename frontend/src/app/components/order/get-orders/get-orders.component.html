@@ -1,10 +1,10 @@
 <div class="p-card my-4 p-[2rem] border-md">
-    <p-table [value]="orders" dataKey="orderNumber" [tableStyle]="{ 'min-width': '60rem' }">
+    <p-table [value]="orders" dataKey="orderNumber" [tableStyle]="{ 'min-width': '60rem' }" class="min-w-full">
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 5rem"></th>
                 <th pSortableColumn="orderNumber"># Pedido <p-sortIcon field="orderNumber"></p-sortIcon></th>
-                <th>Nota</th>
+                <th>Nota do pedido</th>
                 <th>Pagar a</th>
                 <th>Total</th>
             </tr>

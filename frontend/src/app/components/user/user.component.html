@@ -1,4 +1,26 @@
-<p-button styleClass="" severity="secondary" (click)="openCreateOrderDialog()">Efetuar pedido</p-button>
+<div *ngIf="responsibleName" class="my-5 flex w-full justify-between items-center">
+  <div>
+    <p class="text-4xl font-bold">Boas, {{ responsibleName }}</p>
+  </div>
+  <!-- <div class="">
+    <p-button label="Resetar nome" (click)="resetResponsibleName()"></p-button>
+  </div> -->
+</div>
+<div class="">
+  <p-button styleClass="" severity="secondary" (click)="openCreateOrderDialog()">Efetuar pedido</p-button>
+</div>
 <div>
+  <p-toast position="bottom-right"></p-toast>
   <app-get-orders></app-get-orders>
 </div>
+
+<p-dialog *ngIf="!responsibleName" header="Quem és?" [(visible)]="displayDialog" [closable]="false" [modal]="true" [draggable]="false">
+  <p class="max-w-[20rem] text-[0.8rem]">Este é o nome que a pessoa que for às compras vai ver, por favor não jordes corres o risco de não te comprarem nada.</p>
+  <div class="grid grid-cols-1 justify-center justify-items-center space-y-8">
+    <span class="p-float-label mt-5">
+      <input id="responsibleName" type="text" pInputText [(ngModel)]="inputResponsibleName" />
+      <label for="responsibleName">Nome</label>
+    </span>
+    <p-button label="Ok" (click)="setResponsibleName()"></p-button>
+  </div>
+</p-dialog>

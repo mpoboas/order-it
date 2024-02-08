@@ -25,7 +25,7 @@ export class OrderService {
     return this.http.post(this.baseUrl, orderData);
   }
 
-  // Mock data for demonstration purposes
+  // Mock data for demonstration purposes | TO BE DELETED
   private orders: any[] = [
     { orderNumber: 1, orderNote: 'This is a note', responsibleName: 'John Doe', payerName: 'Julinho' },
     { orderNumber: 2, orderNote: 'This is another note', responsibleName: 'Jane Doe', payerName: 'Julinha'},
