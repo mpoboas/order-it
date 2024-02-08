@@ -1,1 +1,52 @@
-<p>create-order works!</p>
+<div class="p-fluid">
+    <p class="mb-4 text-2xl font-bold">Pedido {{ orderData.orderNumber }}</p>
+  
+    <div class="space-5" *ngFor="let item of orderData.items; let i = index">
+      <p-panel header="Item {{ i + 1 }}">
+        <div class="p-field mt-2">
+            <span class="p-float-label">
+                <input id="itemName{{ i }}" pInputText type="text" [(ngModel)]="item.itemName" />
+                <label for="itemName{{ i }}">Produto</label>
+            </span>
+        </div>
+  
+        <div class="p-field space-y-3 mb-9 mt-5">
+          <label>Tipo de Marca</label>
+          <div class="p-formgroup-inline">
+            <div class="p-field-radiobutton">
+              <p-radioButton name="itemBrandType{{ i }}" value="Marca Original" [(ngModel)]="item.itemBrandType"></p-radioButton>
+              <label for="marcaOriginal{{ i }}">Marca Original</label>
+            </div>
+            <div class="p-field-radiobutton">
+              <p-radioButton name="itemBrandType{{ i }}" value="Marca Branca" [(ngModel)]="item.itemBrandType"></p-radioButton>
+              <label for="marcaBranca{{ i }}">Marca Branca</label>
+            </div>
+          </div>
+        </div>
+  
+        <div class="p-field space-y-3">
+            <span class="p-float-label">
+                <p-inputNumber [(ngModel)]="item.itemUnitsQuantity" [showButtons]="true" inputId="stacked" mode="decimal" [min]="1"> </p-inputNumber>
+                <label for="itemUnitsQuantity{{ i }}">Quantidade</label>
+            </span>
+        </div>
+      </p-panel>
+    </div>
+  
+    <div class="p-field my-5">
+      <p-button (click)="addItem()" label="Adicionar outro produto"></p-button>
+    </div>
+  
+    <div class="p-field mb-5 mt-7">
+      <span class="p-float-label">
+        <input id="orderNote" pInputText type="text" [(ngModel)]="orderData.orderNote" />
+        <label for="orderNote">Nota</label>
+      </span>
+    </div>
+  
+    <div class="flex flex-row my-5 space-x-3">
+        <p-button (click)="cancel()" label="Cancelar" severity="secondary"></p-button>
+        <p-button (click)="createOrder()" label="Finalizar pedido"></p-button>
+    </div>
+  </div>
+  

@@ -13,6 +13,16 @@ import { EditOrderComponent } from './components/order/edit-order/edit-order.com
 import { GetOrdersComponent } from './components/order/get-orders/get-orders.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { UserComponent } from './components/user/user.component';
+import { DialogService } from 'primeng/dynamicdialog';
+import { HttpClientModule } from '@angular/common/http';
+import { OrderService } from './services/order.service';
+import { TableModule } from 'primeng/table';
+import { CardModule } from 'primeng/card';
+import { FormsModule } from '@angular/forms';
+import { PanelModule } from 'primeng/panel';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -26,12 +36,20 @@ import { UserComponent } from './components/user/user.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     ButtonModule,
     DividerModule,
     MenubarModule,
+    TableModule,
+    CardModule,
+    FormsModule,
+    PanelModule,
+    RadioButtonModule,
+    InputTextModule,
+    InputNumberModule,
   ],
-  providers: [],
+  providers: [DialogService, OrderService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

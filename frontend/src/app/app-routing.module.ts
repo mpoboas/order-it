@@ -5,7 +5,7 @@ import { UserComponent } from './components/user/user.component';
 
 const routes: Routes = [
   { path: 'url-super-secreto', component: AdminComponent },
-  { path: 'order', component: UserComponent },
+  { path: 'pedido', component: UserComponent },
   { path: '**', redirectTo: '' },
 ];
 

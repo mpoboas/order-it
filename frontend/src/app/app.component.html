@@ -1,12 +1,14 @@
-<div class="container mx-auto my-auto">
-  <div class="p-5">
-    <div class="space-x-4">
-      <p-button routerLink="/url-super-secreto" routerLinkActive="active" label="Admin"></p-button>
-      <p-button routerLink="/order" routerLinkActive="active" label="User"></p-button>
-    </div>
-    <p-divider></p-divider>
-    <div>
-      <router-outlet></router-outlet>
+<html class="scroll-smooth">
+  <div class="container mx-auto my-auto">
+    <div class="p-5">
+      <div class="space-x-4">
+        <p-button routerLink="/url-super-secreto" routerLinkActive="active" label="Admin"></p-button>
+        <p-button routerLink="/pedido" routerLinkActive="active" label="User"></p-button>
+      </div>
+      <p-divider></p-divider>
+      <div>
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
-</div>
+</html>
