@@ -7,6 +7,7 @@
                 <th>Nota do pedido</th>
                 <th>Pagar a</th>
                 <th>Total</th>
+                <th *ngIf="isAdmin()">Ações</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-order let-expanded="expanded">
@@ -18,6 +19,9 @@
                 <td>{{ order.orderNote }}</td>
                 <td>{{ order.payerName }}</td>
                 <td>{{ calculateTotal(order) | currency: 'EUR' }}</td>
+                <td *ngIf="isAdmin()">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editOrder(order)"></button>
+                </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="rowexpansion" let-order>
@@ -52,4 +56,88 @@
             </tr>
         </ng-template>
     </p-table>
+
+    <p-dialog [(visible)]="orderDialog" [modal]="true" [draggable]="false" header="Editar pedido" [modal]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="field">
+                <span class="p-float-label mt-5">
+                    <input id="orderNote" pInputText type="text" readonly [(ngModel)]="selectedOrder.orderNote" />
+                    <label for="orderNote">Nota do pedido</label>
+                </span>
+                
+            </div>
+            <div class="card">
+                <p-table [value]="selectedOrder.items" dataKey="itemName" editMode="row" class="min-w-full">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Produto</th>
+                            <th>Tipo de Marca</th>
+                            <th >Quantidade</th>
+                            <th>Preço</th>
+                            <th></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
+                        <tr [pEditableRow]="item">
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="item.itemName" required>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{item.itemName}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown [options]="['Marca Original','Marca Branca']" appendTo="body" [(ngModel)]="item.itemBrandType" [style]="{'width':'100%'}"></p-dropdown>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{item.itemBrandType}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <span class="p-float-label">
+                                            <p-inputNumber [(ngModel)]="item.itemUnitsQuantity" [showButtons]="true" inputId="stacked" mode="decimal" [min]="1"></p-inputNumber>
+                                        </span>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{item.itemUnitsQuantity}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <p-inputNumber [(ngModel)]="item.itemPrice" mode="currency" currency="EUR" locale="pt-PT"> </p-inputNumber>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{item.itemPrice | currency: 'EUR'}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td>
+                                <div class="flex align-items-center justify-content-center gap-2">
+                                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(item)" class="p-button-rounded p-button-text"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(item, ri)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(item, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            
+        </ng-template>
+    
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveOrder()"></button>
+        </ng-template>
+    </p-dialog>
 </div>

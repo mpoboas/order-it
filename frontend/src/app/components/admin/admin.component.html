@@ -1,3 +1,21 @@
-<div class="">
-    <p class="text-lg">Admin</p>
-</div>
+<div *ngIf="adminName" class="my-5 flex w-full justify-between items-center">
+    <div>
+      <p class="text-4xl font-bold">Mékié, {{ adminName }}</p>
+    </div>
+    <!-- <div class="">
+      <p-button label="Resetar nome" (click)="resetResponsibleName()"></p-button>
+    </div> -->
+  </div>
+<div>
+    <p-toast position="bottom-right"></p-toast>
+    <app-get-orders [isAdminPage]="true"></app-get-orders>
+  </div>
+<p-dialog *ngIf="!adminName" header="Olá administrador!" [(visible)]="displayDialog" [closable]="false" [modal]="true" [draggable]="false">
+    <div class="grid grid-cols-1 justify-center justify-items-center space-y-8">
+        <span class="p-float-label mt-5">
+        <input id="adminName" type="text" pInputText [(ngModel)]="inputAdminName" />
+        <label for="adminName">Nome</label>
+        </span>
+        <p-button label="Ok" (click)="setAdminName()"></p-button>
+    </div>
+</p-dialog>

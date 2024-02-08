@@ -11,7 +11,7 @@
 </div>
 <div>
   <p-toast position="bottom-right"></p-toast>
-  <app-get-orders></app-get-orders>
+  <app-get-orders [isAdminPage]="false"></app-get-orders>
 </div>
 
 <p-dialog *ngIf="!responsibleName" header="Quem és?" [(visible)]="displayDialog" [closable]="false" [modal]="true" [draggable]="false">

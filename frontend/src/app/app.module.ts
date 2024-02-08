@@ -21,10 +21,11 @@ import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { UserService } from './services/user.service';
 
@@ -54,8 +55,9 @@ import { UserService } from './services/user.service';
     InputNumberModule,
     ToastModule,
     DialogModule,
+    DropdownModule,
   ],
-  providers: [DialogService, MessageService, OrderService, UserService],
+  providers: [DialogService, MessageService, ConfirmationService, OrderService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
