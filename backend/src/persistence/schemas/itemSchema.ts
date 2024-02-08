@@ -31,7 +31,6 @@ const ItemSchema = new Schema(
     },
     {
         timestamps: true,
-        _id: false,
     },
 );
 

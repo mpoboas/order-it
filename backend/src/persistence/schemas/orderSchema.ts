@@ -12,6 +12,11 @@ const OrderSchema = new Schema(
             type: String,
         },
 
+        orderNumber: {
+            type: Number,
+            unique: true,
+        },
+
         orderNote: {
             type: String,
         },
@@ -22,7 +27,6 @@ const OrderSchema = new Schema(
     },
     {
         timestamps: true,
-        _id: false,
     },
 );
 

@@ -1,4 +1,5 @@
 interface ItemOutDto {
+  id: string;
   itemPrice: number;
   itemName: string;
   itemBrandType: string;

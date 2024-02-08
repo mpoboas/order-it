@@ -1,4 +1,4 @@
-import IErrorDto from '../../dto/IErrorDto';
+import ErrorDto from '../../dto/out/ErrorDto';
 
 export class Utils {
   static removeQuotesAndBackslashes(segment: string): string {
@@ -29,8 +29,8 @@ export class Utils {
     return formattedMessage;
   }
 
-  static convertToErrorDTO(errorMessage: string): IErrorDto {
-    const errorDto: IErrorDto = {
+  static convertToErrorDTO(errorMessage: string): ErrorDto {
+    const errorDto: ErrorDto = {
       message: errorMessage,
     };
 

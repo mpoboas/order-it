@@ -90,9 +90,12 @@ export default class ItemService implements IItemService {
             if (nameOrError.isFailure) {
                 return Result.fail<ItemOutDto>(nameOrError.errorValue(), FailureType.InvalidInput);
             }
-            const priceOrError = ItemPrice.create(itemEditDto.itemPrice);
-            if (priceOrError.isFailure) {
-                return Result.fail<ItemOutDto>(priceOrError.errorValue(), FailureType.InvalidInput);
+            if (itemEditDto.itemPrice) {
+                const priceOrError = ItemPrice.create(itemEditDto.itemPrice);
+                if (priceOrError.isFailure) {
+                    return Result.fail<ItemOutDto>(priceOrError.errorValue(), FailureType.InvalidInput);
+                }
+                item.price = priceOrError.getValue();
             }
             const unitsQuantityOrError = ItemUnitsQuantity.create(itemEditDto.itemUnitsQuantity);
             if (unitsQuantityOrError.isFailure) {
@@ -108,7 +111,6 @@ export default class ItemService implements IItemService {
             }
 
             item.name = nameOrError.getValue();
-            item.price = priceOrError.getValue();
             item.unitsQuantity = unitsQuantityOrError.getValue();
             item.brandType = brandType;
 

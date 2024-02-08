@@ -15,6 +15,9 @@ export default class ItemRepo implements IItemRepo {
     public async findById(itemId: string): Promise<Item> {
         const query = {id: itemId};
         const itemDocument = await this.itemSchema.findOne(query);
+        if (itemDocument === null) {
+            return null;
+        }
         return ItemMapper.toDomain(itemDocument);
     }
 
@@ -46,8 +49,8 @@ export default class ItemRepo implements IItemRepo {
 
                 return ItemMapper.toDomain(itemCreated);
             } else {
-                if (item.price) {
-                    itemDocument.itemPrice = item.totalPrice;
+                if (item.price !== null) {
+                    itemDocument.itemPrice = item.price.price;
                 } else {
                     itemDocument.itemPrice = null;
                 }

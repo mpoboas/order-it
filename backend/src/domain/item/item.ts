@@ -38,16 +38,16 @@ export class Item extends Entity<ItemProps> {
         return this.props.itemUnitsQuantity;
     }
 
-    get totalPrice(): number {
-        return this.props.itemUnitsQuantity.numberOfUnits * this.props.itemPrice.price;
-    }
-
     set name(newName: ItemName) {
         this.props.itemName = newName;
     }
 
     set price(newPrice: ItemPrice) {
         this.props.itemPrice = newPrice;
+    }
+
+    get price(): ItemPrice {
+        return this.props.itemPrice;
     }
 
     set unitsQuantity(newUnitsQuantity: ItemUnitsQuantity) {
@@ -76,7 +76,7 @@ export class Item extends Entity<ItemProps> {
 
         const item = new Item({
             ...props,
-        });
+        }, id);
 
         return Result.ok<Item>(item);
     }

@@ -61,7 +61,39 @@ export default class OrderRepo implements IOrderRepo {
     }
 
     public async findAll(): Promise<Order[]> {
-        const orderRecords = await this.orderSchema.find();
+        // Aggregation pipeline that gets all orders and adds the field orderPrice by looking for the items of each order and summing their prices to get the total order price
+        const orderRecords = await this.orderSchema.aggregate([
+            {
+                $lookup: {
+                    from: 'items',
+                    localField: 'id',
+                    foreignField: 'orderId',
+                    as: 'items'
+                }
+            },
+            {
+                $addFields: {
+                    orderPrice: {
+                        $reduce: {
+                            input: "$items",
+                            initialValue: 0,
+                            in: {
+                                $add: [
+                                    "$$value",
+                                    { $multiply: ["$$this.itemPrice", "$$this.itemUnitsQuantity"] }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    orderPrice: { $round: ["$orderPrice", 2] }
+                }
+            }
+        ]);
+
         const orders = orderRecords.map(OrderMapper.toDomain);
         return Promise.all(orders);
     }

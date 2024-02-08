@@ -1,0 +1,416 @@
+{
+	"info": {
+		"_postman_id": "9d1ed15f-960e-4710-9446-136232fe2842",
+		"name": "OrderIt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30234895"
+	},
+	"item": [
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Get all orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Orders",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create an Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"responsibleName\": \"Hamilton\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Orders",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create an Order with Note",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"responsibleName\": \"Hamilton\",\r\n    \"orderNote\": \"Se tiver ovos, traz leite\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Orders",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark order as paid",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const requestBody = {\r",
+									"    responsibleName: \"Julinho\",\r",
+									"    orderNote: \"Esta order é conjunta\"\r",
+									"};\r",
+									"\r",
+									"\r",
+									"// Log the request body in a pretty format\r",
+									"console.log('Request Body:', JSON.stringify(requestBody, null, 2));\r",
+									"\r",
+									"// Make the POST request to create the order\r",
+									"pm.sendRequest({\r",
+									"  url: 'http://localhost:4000/api/Orders',\r",
+									"  method: 'POST',\r",
+									"  header: {\r",
+									"    'Content-Type': 'application/json',\r",
+									"  },\r",
+									"    body: {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify(requestBody),\r",
+									"  },\r",
+									"}, (error, response) => {\r",
+									"  // Log response\r",
+									"  console.log(response);\r",
+									"\r",
+									"  // Check for errors\r",
+									"  if (error) {\r",
+									"    console.error(error);\r",
+									"    return;\r",
+									"  }\r",
+									"\r",
+									"  // Parse the response JSON\r",
+									"  const responseBody = response.json();\r",
+									"\r",
+									"  // Extract the ID from the response and store it in a variable\r",
+									"  const id = responseBody.id;\r",
+									"  pm.collectionVariables.set('orderPaidId', id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"payerName\": \"118\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Orders/{{orderPaidId}}",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Orders",
+								"{{orderPaidId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Items",
+			"item": [
+				{
+					"name": "Get all items",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Items",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Items By Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Items/changeToOrderIdHere",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Items",
+								"changeToOrderIdHere"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order and Add Item",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const requestBody = {\r",
+									"    responsibleName: \"Vicente\",\r",
+									"    orderNote: \"Esta order tem items\"\r",
+									"};\r",
+									"\r",
+									"\r",
+									"// Log the request body in a pretty format\r",
+									"console.log('Request Body:', JSON.stringify(requestBody, null, 2));\r",
+									"\r",
+									"// Make the POST request to create the order\r",
+									"pm.sendRequest({\r",
+									"  url: 'http://localhost:4000/api/Orders',\r",
+									"  method: 'POST',\r",
+									"  header: {\r",
+									"    'Content-Type': 'application/json',\r",
+									"  },\r",
+									"    body: {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify(requestBody),\r",
+									"  },\r",
+									"}, (error, response) => {\r",
+									"  // Log response\r",
+									"  console.log(response);\r",
+									"\r",
+									"  // Check for errors\r",
+									"  if (error) {\r",
+									"    console.error(error);\r",
+									"    return;\r",
+									"  }\r",
+									"\r",
+									"  // Parse the response JSON\r",
+									"  const responseBody = response.json();\r",
+									"\r",
+									"  // Extract the ID from the response and store it in a variable\r",
+									"  const id = responseBody.id;\r",
+									"  pm.collectionVariables.set('orderId', id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itemName\": \"Bolachas Maria\",\r\n    \"itemBrandType\": \"ORIGINAL\",\r\n    \"itemUnitsQuantity\": \"1\",\r\n    \"orderId\": \"{{orderId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Items",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Item to Order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itemName\": \"Vodka\",\r\n    \"itemBrandType\": \"ORIGINAL\",\r\n    \"itemUnitsQuantity\": \"2\",\r\n    \"orderId\": \"changeToOrderIdHere\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Items",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Item",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itemName\": \"Vodka\",\r\n    \"itemBrandType\": \"ORIGINAL\",\r\n    \"itemUnitsQuantity\": \"3\",\r\n    \"itemPrice\": 4.5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}:{{PORT}}/{{PREFIX}}/Items/changeToItemIdHere",
+							"host": [
+								"{{URL}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"{{PREFIX}}",
+								"Items",
+								"changeToItemIdHere"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "PORT",
+			"value": "4000",
+			"type": "string"
+		},
+		{
+			"key": "PREFIX",
+			"value": "api",
+			"type": "string"
+		},
+		{
+			"key": "orderPaidId",
+			"value": ""
+		},
+		{
+			"key": "orderId",
+			"value": ""
+		}
+	]
+}

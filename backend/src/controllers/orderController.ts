@@ -55,21 +55,6 @@ export default class OrderController implements IOrderController {
         return res.status(200).json(buildingDTO);
     }
 
-    public async listBuildingsWithMinAndMaxFloors(req: Request, res: Response) {
-        try {
-            // Call the service to list all buildings with the given min and max floors.
-            const buildings = await this.buildingServiceInstance.listBuildingsWithMinAndMaxFloors(
-                parseInt(req.query.minFloors as string),
-                parseInt(req.query.maxFloors as string),
-            );
-
-            // If the request succeeds, return the buildings.
-            return res.status(200).json(buildings);
-        } catch (e) {
-            return res.status(503).send(e.message);
-        }
-    }
-
     private returnError(result: Result<any>, res: Response) {
         const errorDto = Utils.convertToErrorDTO(result.errorValue());
         switch (result.failureType) {

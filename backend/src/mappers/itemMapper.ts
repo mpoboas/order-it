@@ -10,10 +10,11 @@ import ItemOutDto from "../dto/out/ItemOutDto";
 export class ItemMapper extends Mapper<Item> {
     public static toDTO(item: Item): ItemOutDto {
         return {
+            id: item.id.toString(),
             itemName: item.name.value,
             itemBrandType: item.brandType,
             itemUnitsQuantity: item.unitsQuantity.numberOfUnits,
-            itemPrice: item.totalPrice,
+            itemPrice: item.price ? item.price.price : 0.0,
         };
     }
 

@@ -24,7 +24,12 @@ export default class OrderService implements IOrderService {
     public async createOrder(orderCreateDto: OrderCreateDto): Promise<Result<OrderOutDto>> {
         try {
             // Get the last order number
-            const lastOrder = await this.orderRepo.findLastOrderNumber();
+            let lastOrder = await this.orderRepo.findLastOrderNumber();
+
+            // If there are no orders, set the last order number to 0
+            if (!lastOrder) {
+                lastOrder = 0;
+            }
 
             // Create order entity
             orderCreateDto.orderNumber = lastOrder + 1;
@@ -50,7 +55,7 @@ export default class OrderService implements IOrderService {
      */
     public async listOrders(): Promise<OrderOutDto[]> {
         try {
-            // Get all orders from the database
+            // Get all orders from the database but add the field orderPrice by looking for the items of each order and summing their prices to get the total order price
             const orders = await this.orderRepo.findAll();
 
             // Return ordersDto's

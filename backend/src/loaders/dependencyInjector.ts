@@ -6,16 +6,12 @@ export default ({
   controllers,
   repos,
   services,
-  factories,
-  gateways,
 }: {
   mongoConnection;
   schemas: { name: string; schema: any }[];
   controllers: { name: string; path: string }[];
   repos: { name: string; path: string }[];
   services: { name: string; path: string }[];
-  factories: { name: string; path: string }[];
-  gateways: { name: string; path: string }[];
 }) => {
   try {
     Container.set('logger', LoggerInstance);
@@ -37,20 +33,6 @@ export default ({
       const repoClass = require(m.path).default;
       const repoInstance = Container.get(repoClass);
       Container.set(m.name, repoInstance);
-    });
-
-    factories.forEach(m => {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const factoryClass = require(m.path).default;
-      const factoryInstance = Container.get(factoryClass);
-      Container.set(m.name, factoryInstance);
-    });
-
-    gateways.forEach(m => {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const gatewayClass = require(m.path).default;
-      const gatewayInstance = Container.get(gatewayClass);
-      Container.set(m.name, gatewayInstance);
     });
 
     services.forEach(m => {

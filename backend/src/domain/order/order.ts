@@ -11,6 +11,7 @@ interface OrderProps {
     orderNote?: OrderNote;
     responsibleName: ResponsibleName;
     payerName?: PayerName;
+    orderPrice?: number;
 }
 
 export class Order extends AggregateRoot<OrderProps> {
@@ -28,6 +29,10 @@ export class Order extends AggregateRoot<OrderProps> {
 
     get payerName(): PayerName {
         return this.props.payerName;
+    }
+
+    get orderPrice(): number {
+        return this.props.orderPrice;
     }
 
     private constructor(props: OrderProps, id?: UniqueEntityID) {

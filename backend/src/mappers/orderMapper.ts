@@ -6,15 +6,16 @@ import {OrderNote} from '../domain/order/orderNote';
 import {ResponsibleName} from '../domain/order/responsibleName';
 import {UniqueEntityID} from "../core/domain/UniqueEntityID";
 import {PayerName} from "../domain/order/payerName";
-import {IOrderPersistence} from "../dataschema/IOrderPersistence";
 
 export class OrderMapper extends Mapper<Order> {
     public static toDTO(order: Order): OrderOutDto {
         return {
+            id: order.id.toString(),
             orderNumber: order.orderNumber,
             responsibleName: order.responsibleName.value,
-            orderPrice: 0.0,
+            orderPrice: order.orderPrice,
             payerName: order.payerName ? order.payerName.value : 'NPY',
+            orderNote: order.orderNote ? order.orderNote.text : null,
         };
     }
 
@@ -51,6 +52,7 @@ export class OrderMapper extends Mapper<Order> {
                 responsibleName: responsibleNameOrError.getValue(),
                 orderNote: orderNote,
                 payerName: payerName,
+                orderPrice: raw.orderPrice ? raw.orderPrice : 0.0
             },
             new UniqueEntityID(raw.id),
         );
