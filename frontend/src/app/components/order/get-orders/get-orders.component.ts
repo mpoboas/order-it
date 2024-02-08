@@ -93,7 +93,6 @@ export class GetOrdersComponent implements OnInit {
   }
 
   isAdmin(): boolean {
-    console.log('isAdminPage:', this.isAdminPage);
     let storedValue = localStorage.getItem('adminName');
     if (storedValue && JSON.parse(storedValue).name && this.isAdminPage) {
       return true;

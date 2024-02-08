@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
+import { Meta } from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-admin',
@@ -12,9 +14,12 @@ export class AdminComponent implements OnInit {
   inputAdminName = '';
   adminName: string | null = null;
 
-  constructor(private userService: UserService) {}
+  constructor(private meta: Meta, private titleService: Title, private userService: UserService) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Order It! - Admin');
+    this.meta.updateTag({ name: 'title', content: 'Order It! - Admin' });
+    this.meta.updateTag({ name: 'description', content: 'Gere todos os pedidos na Order It! define preços e muito mais!' });
     this.adminName = this.userService.getAdminName();
 
     if (!this.adminName) {

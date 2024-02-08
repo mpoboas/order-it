@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from 'src/app/services/order.service';
 import { UserService } from 'src/app/services/user.service';
+import { Meta } from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-user',
@@ -13,9 +16,15 @@ export class UserComponent implements OnInit {
   inputResponsibleName = '';
   responsibleName: string | null = null;
 
-  constructor(private orderService: OrderService, private userService: UserService) {}
+  constructor(private meta: Meta, private titleService: Title, private orderService: OrderService, private userService: UserService) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Order It! - Pedidos');
+    this.meta.updateTag({ name: 'title', content: 'Order It! - Pedidos' });
+    this.meta.updateTag({ name: 'description', content: 'Vê todos os teus pedidos na Order It!' });
+
+
+
     this.responsibleName = this.userService.getResponsibleName();
 
     if (!this.responsibleName) {
