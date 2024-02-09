@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from 'src/environments/environment';
-import {Observable, of} from 'rxjs';
-import {DynamicDialogRef, DynamicDialogConfig, DialogService} from 'primeng/dynamicdialog';
+import {Observable, Subject} from 'rxjs';
+import {DynamicDialogRef, DialogService} from 'primeng/dynamicdialog';
 import {CreateOrderComponent} from '../components/order/create-order/create-order.component';
 
 @Injectable({
@@ -11,6 +11,9 @@ import {CreateOrderComponent} from '../components/order/create-order/create-orde
 export class OrderService {
   private ordersBaseUrl = environment.apiUrl + '/api/Orders';
   private itemsBaseUrl = environment.apiUrl + '/api/Items';
+
+  private updateOnOrdersSubject = new Subject<void>();
+  orderUpdated$ = this.updateOnOrdersSubject.asObservable();
 
   constructor(private http: HttpClient, private dialogService: DialogService) {
   }
@@ -36,6 +39,10 @@ export class OrderService {
     return this.http.patch(`${this.ordersBaseUrl}/${orderId}`, orderData);
   }
 
+  updateOrdersTable() {
+    this.updateOnOrdersSubject.next();
+  }
+
   addItemToOrder(itemData: any): Observable<any> {
     return this.http.post(`${this.itemsBaseUrl}`, itemData);
   }
@@ -44,8 +51,12 @@ export class OrderService {
     return this.http.put(`${this.itemsBaseUrl}/${itemData.id}`, itemData);
   }
 
-  getOrdersWithItems(): Observable<any> {
+  getOrders(): Observable<any> {
     return this.http.get(this.ordersBaseUrl);
+  }
+
+  getOrdersByResponsibleName(responsibleName: any): Observable<any> {
+    return this.http.get(`${this.ordersBaseUrl}/${responsibleName}`);
   }
 
   getOrderItems(orderId: string): Observable<any> {

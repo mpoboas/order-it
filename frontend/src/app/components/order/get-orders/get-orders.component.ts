@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MessageService, TreeNode } from 'primeng/api';
-import { OrderService } from 'src/app/services/order.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {MessageService, TreeNode} from 'primeng/api';
+import {OrderService} from 'src/app/services/order.service';
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-get-orders',
   templateUrl: './get-orders.component.html',
-  styles: [
-  ]
+  styles: []
 })
 export class GetOrdersComponent implements OnInit {
   @Input() isAdminPage: any;
@@ -19,12 +19,28 @@ export class GetOrdersComponent implements OnInit {
   clonedItems: { [key: number]: any } = {};
 
 
-  constructor(private orderService: OrderService, private messageService: MessageService) { }
+  constructor(private orderService: OrderService, private messageService: MessageService, private userService: UserService) {
+  }
 
   ngOnInit(): void {
-    this.orderService.getOrdersWithItems().subscribe(orders => {
-      this.orders = orders;
+    this.orderService.orderUpdated$.subscribe(() => {
+      this.loadOrders();
+      console.log('Orders updated');
     });
+    this.loadOrders();
+  }
+
+  loadOrders(): void {
+    if (this.isAdminPage) {
+      this.orderService.getOrders().subscribe(orders => {
+        this.orders = orders;
+      });
+    } else {
+      const responsibleName = this.userService.getResponsibleName();
+      this.orderService.getOrdersByResponsibleName(responsibleName).subscribe(orders => {
+        this.orders = orders;
+      });
+    }
   }
 
   onRowExpand(event: any): void {
@@ -50,28 +66,28 @@ export class GetOrdersComponent implements OnInit {
   saveOrder() {
     // Create a copy of the orders array
     const orders = [...this.orders];
-    
+
     // If the selectedOrder already exists in orders, update it; otherwise, add a new order
     const index = orders.findIndex((o) => o.orderNumber === this.selectedOrder.orderNumber);
-  
+
     if (index !== -1) {
       // Order already exists, update it
-      orders[index] = { ...this.selectedOrder };
+      orders[index] = {...this.selectedOrder};
     } else {
       // Order doesn't exist, add a new one
-      orders.push({ ...this.selectedOrder });
+      orders.push({...this.selectedOrder});
     }
-  
+
     // Update the orders array
     this.orders = orders;
-  
+
     // Close the dialog and reset selectedOrder
     this.orderDialog = false;
     this.selectedOrder = {};
   }
-  
+
   editOrder(order: any) {
-    this.selectedOrder = { ...order };
+    this.selectedOrder = {...order};
     this.getOrderItems(order);
     this.orderDialog = true;
   }
@@ -82,22 +98,22 @@ export class GetOrdersComponent implements OnInit {
   }
 
   onRowEditInit(item: any) {
-    this.clonedItems[item.itemName as any] = { ...item };
+    this.clonedItems[item.itemName as any] = {...item};
   }
 
   onRowEditSave(item: any, index: number) {
-      // You may want to perform validation checks here for item properties
-      if (item.itemPrice > 0 && item.itemUnitsQuantity >= 0) {
-          delete this.clonedItems[item.itemName as any];
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Item atualizado' });
-      } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Preço ou quantidade inválida' });
-      }
+    // You may want to perform validation checks here for item properties
+    if (item.itemPrice > 0 && item.itemUnitsQuantity >= 0) {
+      delete this.clonedItems[item.itemName as any];
+      this.messageService.add({severity: 'success', summary: 'Success', detail: 'Item atualizado'});
+    } else {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Preço ou quantidade inválida'});
+    }
   }
 
   onRowEditCancel(item: any, index: number) {
-      this.selectedOrder.items[index] = this.clonedItems[item.itemName as any];
-      delete this.clonedItems[item.itemName as any];
+    this.selectedOrder.items[index] = this.clonedItems[item.itemName as any];
+    delete this.clonedItems[item.itemName as any];
   }
 
   isAdmin(): boolean {

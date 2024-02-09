@@ -56,6 +56,8 @@ export class CreateOrderComponent implements OnInit {
     this.ref.close();
     this.messageService.add({severity: 'success', summary: 'Successo', detail: 'Pedido efetuado com sucesso!'});
 
+    // Update the table data
+    this.orderService.updateOrdersTable();
   }
 
   cancel(): void {
@@ -135,5 +137,5 @@ export class CreateOrderComponent implements OnInit {
       }
     );
   }
-  
+
 }
