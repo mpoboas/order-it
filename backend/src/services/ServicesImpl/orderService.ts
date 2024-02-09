@@ -8,6 +8,7 @@ import OrderOutDto from "../../dto/out/OrderOutDto";
 import {OrderMapper} from "../../mappers/orderMapper";
 import OrderEditDto from "../../dto/edit/OrderEditDto";
 import {PayerName} from "../../domain/order/payerName";
+import {OrderNote} from "../../domain/order/orderNote";
 
 @Service()
 export default class OrderService implements IOrderService {
@@ -79,11 +80,21 @@ export default class OrderService implements IOrderService {
                 return Result.fail<OrderOutDto>(`No Order found with id=${id}`, FailureType.EntityDoesNotExist);
             }
 
-            // Create the payer name value object
-            const payerName = PayerName.create(orderEditDto.payerName);
+            // Check if a payer name was provided
+            if (orderEditDto.payerName) {
+                // Create the payer name value object
+                const payerName = PayerName.create(orderEditDto.payerName);
+                // Mark the order as paid
+                order.markAsPaid(payerName.getValue());
+            }
 
-            // Mark the order as paid
-            order.markAsPaid(payerName.getValue());
+            // Check if an order note was provided
+            if (orderEditDto.orderNote) {
+                // Create the order note value object
+                const orderNote = OrderNote.create(orderEditDto.orderNote);
+                // Update the order note
+                order.updateOrderNote(orderNote.getValue());
+            }
 
             // If it succeeds, save the updated order
             await this.orderRepo.save(order);

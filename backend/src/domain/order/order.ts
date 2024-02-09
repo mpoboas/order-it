@@ -57,4 +57,8 @@ export class Order extends AggregateRoot<OrderProps> {
     public markAsPaid(payerName: PayerName): void {
         this.props.payerName = payerName;
     }
+
+    public updateOrderNote(orderNote: OrderNote) {
+        this.props.orderNote = orderNote;
+    }
 }

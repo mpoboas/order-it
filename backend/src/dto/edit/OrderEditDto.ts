@@ -1,5 +1,6 @@
 interface OrderEditDto {
-    payerName: string;
+    payerName?: string;
+    orderNote?: string;
 }
 
 export default OrderEditDto;

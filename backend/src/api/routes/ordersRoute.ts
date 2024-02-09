@@ -33,7 +33,8 @@ export default (app: Router) => {
         '/:id',
         celebrate({
             body: Joi.object({
-                payerName: Joi.string().required(),
+                payerName: Joi.string().allow(null).allow(''),
+                orderNote: Joi.string().allow(null).allow(''),
             }),
         }),
         (req, res) => ctrl.editOrder(req, res),
