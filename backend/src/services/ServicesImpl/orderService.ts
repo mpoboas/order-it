@@ -10,6 +10,7 @@ import OrderEditDto from "../../dto/edit/OrderEditDto";
 import {PayerName} from "../../domain/order/payerName";
 import {OrderNote} from "../../domain/order/orderNote";
 import IItemRepo from "../IRepos/IItemRepo";
+import {ReceiverName} from "../../domain/order/receiverName";
 
 @Service()
 export default class OrderService implements IOrderService {
@@ -113,6 +114,14 @@ export default class OrderService implements IOrderService {
                 const orderNote = OrderNote.create(orderEditDto.orderNote);
                 // Update the order note
                 order.updateOrderNote(orderNote.getValue());
+            }
+
+            // Check if a receiver name was provided
+            if (orderEditDto.receiverName) {
+                // Create the receiver name value object
+                const receiverName = ReceiverName.create(orderEditDto.receiverName);
+                // Update the receiver name
+                order.updateReceiverName(receiverName.getValue());
             }
 
             // If it succeeds, save the updated order

@@ -6,6 +6,7 @@ import {OrderNote} from '../domain/order/orderNote';
 import {ResponsibleName} from '../domain/order/responsibleName';
 import {UniqueEntityID} from "../core/domain/UniqueEntityID";
 import {PayerName} from "../domain/order/payerName";
+import {ReceiverName} from "../domain/order/receiverName";
 
 export class OrderMapper extends Mapper<Order> {
     public static toDTO(order: Order): OrderOutDto {
@@ -16,6 +17,7 @@ export class OrderMapper extends Mapper<Order> {
             orderPrice: order.orderPrice,
             payerName: order.payerName ? order.payerName.value : 'NPY',
             orderNote: order.orderNote ? order.orderNote.text : null,
+            receiverName: order.receiverName ? order.receiverName.value : null,
         };
     }
 
@@ -46,12 +48,23 @@ export class OrderMapper extends Mapper<Order> {
             payerName = payerNameOrError.getValue();
         }
 
+        // If the receiver name is provided, create the receiver name value object.
+        let receiverName = null;
+        if (raw.receiverName) {
+            const receiverNameOrError = ReceiverName.create(raw.receiverName);
+            if (receiverNameOrError.isFailure) {
+                throw new TypeError(receiverNameOrError.errorMessage());
+            }
+            receiverName = receiverNameOrError.getValue();
+        }
+
         // Create the order entity.
         const orderOrError = Order.create({
                 orderNumber: raw.orderNumber,
                 responsibleName: responsibleNameOrError.getValue(),
                 orderNote: orderNote,
                 payerName: payerName,
+                receiverName: receiverName,
                 orderPrice: raw.orderPrice ? raw.orderPrice : 0.0
             },
             new UniqueEntityID(raw.id),
@@ -77,6 +90,10 @@ export class OrderMapper extends Mapper<Order> {
 
         if (order.orderNote) {
             persistenceOrder.orderNote = order.orderNote.text;
+        }
+
+        if (order.receiverName) {
+            persistenceOrder.receiverName = order.receiverName.value;
         }
 
         return persistenceOrder;

@@ -1,158 +1,194 @@
 <div class="p-card my-4 p-[2rem] border-md">
-    <p-table [value]="orders" dataKey="orderNumber" [tableStyle]="{ 'min-width': '60rem' }" class="min-w-full" (onRowExpand)="onRowExpand($event)">
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="width: 5rem"></th>
-                <th pSortableColumn="orderNumber"># Pedido <p-sortIcon field="orderNumber"></p-sortIcon></th>
-                <th>Total</th>
-                <th>Nota do pedido</th>
-                <!-- <th>Pagar a</th> -->
-                <th>Quem pagou?</th>
-                <th *ngIf="isAdmin()">Ações</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-order let-expanded="expanded">
-            <tr>
-                <td>
-                    <button type="button" pButton pRipple [pRowToggler]="order" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
-                </td>
-                <td>{{ order.orderNumber }}</td>
-                <td>{{ order.orderPrice | currency: 'EUR' }}</td>
-                <td>
-                    <ng-container *ngIf="order.orderNote; else noNote">
-                        {{ order.orderNote }}
-                    </ng-container>
-                    <ng-template #noNote>
-                        <p-tag [style]="{'background-color': 'gray', 'color': 'white'}">Sem nota</p-tag>
-                    </ng-template>
-                </td>
-                <td>
-                    <ng-container *ngIf="order.payerName === 'NPY'; else notNPY">
-                        <p-tag severity="danger">Por pagar</p-tag>
-                    </ng-container>
-                    <ng-template #notNPY>
-                        {{ order.payerName }}
-                    </ng-template>
-                </td>
-                <td *ngIf="isAdmin()">
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editOrder(order)"></button>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="rowexpansion" let-order>
-            <tr>
-                <td colspan="6">
-                    <div class="p-3">
-                        <p-table [value]="orderItemsMap[order.id]" dataKey="item.id" *ngIf="orderItemsMap[order.id]">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th pSortableColumn="itemName">Produto <p-sortIcon field="itemName"></p-sortIcon></th>
-                                    <th pSortableColumn="itemBrandType">Tipo de Marca <p-sortIcon field="itemBrandType"></p-sortIcon></th>
-                                    <th pSortableColumn="itemUnitsQuantity">Quantidade <p-sortIcon field="itemUnitsQuantity"></p-sortIcon></th>
-                                    <th pSortableColumn="itemPrice">Preço <p-sortIcon field="itemPrice"></p-sortIcon></th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-item>
-                                <tr>
-                                    <td>{{ item.itemName }}</td>
-                                    <td>{{ item.itemBrandType }}</td>
-                                    <td>{{ item.itemUnitsQuantity }}</td>
-                                    <td>{{ item.itemPrice | currency: 'EUR' }}</td>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="emptymessage">
-                                <tr>
-                                    <td colspan="4">Este pedido não tem itens.</td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+  <p-table [value]="orders" dataKey="orderNumber" [tableStyle]="{ 'min-width': '60rem' }" class="min-w-full"
+           (onRowExpand)="onRowExpand($event)" *ngIf="orders.length > 0">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 5rem"></th>
+        <th pSortableColumn="orderNumber"># Pedido
+          <p-sortIcon field="orderNumber"></p-sortIcon>
+        </th>
+        <th>Total</th>
+        <th>Nota do pedido</th>
+        <th>Pagar a</th>
+        <th>Quem pagou?</th>
+        <th *ngIf="isAdmin()">Ações</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order let-expanded="expanded">
+      <tr>
+        <td>
+          <button type="button" pButton pRipple [pRowToggler]="order"
+                  class="p-button-text p-button-rounded p-button-plain"
+                  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+        </td>
+        <td>{{ order.orderNumber }}</td>
+        <td>{{ order.orderPrice | currency: 'EUR' }}</td>
+        <td>
+          <ng-container *ngIf="order.orderNote; else noNote">
+            {{ order.orderNote }}
+          </ng-container>
+          <ng-template #noNote>
+            <p-tag [style]="{'background-color': 'gray', 'color': 'white'}">Sem nota</p-tag>
+          </ng-template>
+        </td>
+        <td>
+          <ng-container *ngIf="order.receiverName; else toDefine">
+            {{ order.receiverName }}
+          </ng-container>
+          <ng-template #toDefine>
+            A definir
+          </ng-template>
+        </td>
+        <td>
+          <ng-container *ngIf="order.payerName === 'NPY'; else notNPY">
+            <p-tag severity="danger">Por pagar</p-tag>
+          </ng-container>
+          <ng-template #notNPY>
+            <p-tag severity="success">{{order.payerName}}</p-tag>
+          </ng-template>
+        </td>
 
-    <p-dialog [(visible)]="orderDialog" [modal]="true" [draggable]="false" header="Editar pedido" [modal]="true" [breakpoints]="{ '960px': '90vw' }" [style]="{ width: '60vw' }">
-        <ng-template pTemplate="content">
-            <div class="field">
+        <td *ngIf="isAdmin()">
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                  (click)="editOrder(order)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-order>
+      <tr>
+        <td colspan="6">
+          <div class="p-3">
+            <p-table [value]="orderItemsMap[order.id]" dataKey="item.id" *ngIf="orderItemsMap[order.id]">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th pSortableColumn="itemName">Produto
+                    <p-sortIcon field="itemName"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="itemBrandType">Tipo de Marca
+                    <p-sortIcon field="itemBrandType"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="itemUnitsQuantity">Quantidade
+                    <p-sortIcon field="itemUnitsQuantity"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="itemPrice">Preço
+                    <p-sortIcon field="itemPrice"></p-sortIcon>
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item>
+                <tr>
+                  <td>{{ item.itemName }}</td>
+                  <td>{{ item.itemBrandType }}</td>
+                  <td>{{ item.itemUnitsQuantity }}</td>
+                  <td>{{ item.itemPrice | currency: 'EUR' }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="4">Este pedido não tem itens.</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+
+  <p *ngIf="orders.length === 0 && isAdminPage">Ainda não há pedidos.</p>
+  <p *ngIf="orders.length === 0 && !isAdminPage">Faz o teu primeiro pedido :)</p>
+
+  <p-dialog [(visible)]="orderDialog" [modal]="true" [draggable]="false" header="Editar pedido" [modal]="true"
+            [breakpoints]="{ '960px': '90vw' }" [style]="{ width: '60vw' }">
+    <ng-template pTemplate="content">
+      <div class="field">
                 <span class="p-float-label mt-5">
-                    <input id="orderNote" pInputText type="text" [(ngModel)]="selectedOrder.orderNote" />
+                    <input id="orderNote" pInputText type="text" [(ngModel)]="selectedOrder.orderNote"/>
                     <label for="orderNote">Nota do pedido</label>
                 </span>
 
-            </div>
-            <div class="card">
-                <p-table [value]="orderItemsMap[selectedOrder.id]" dataKey="itemName" editMode="row">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Produto</th>
-                            <th>Tipo de Marca</th>
-                            <th >Quantidade</th>
-                            <th>Preço</th>
-                            <th></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
-                        <tr [pEditableRow]="item">
-                            <td>
-                                <p-cellEditor>
-                                    <ng-template pTemplate="input">
-                                        <input pInputText type="text" [(ngModel)]="item.itemName" required>
-                                    </ng-template>
-                                    <ng-template pTemplate="output">
-                                        {{item.itemName}}
-                                    </ng-template>
-                                </p-cellEditor>
-                            </td>
-                            <td>
-                                <p-cellEditor>
-                                    <ng-template pTemplate="input">
-                                        <p-dropdown [options]="['Marca Original','Marca Branca']" appendTo="body" [(ngModel)]="item.itemBrandType" [style]="{'width':'100%'}"></p-dropdown>
-                                    </ng-template>
-                                    <ng-template pTemplate="output">
-                                        {{item.itemBrandType}}
-                                    </ng-template>
-                                </p-cellEditor>
-                            </td>
-                            <td>
-                                <p-cellEditor>
-                                    <ng-template pTemplate="input">
+      </div>
+      <div class="card">
+        <p-table [value]="orderItemsMap[selectedOrder.id]" dataKey="itemName" editMode="row">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Produto</th>
+              <th>Tipo de Marca</th>
+              <th>Quantidade</th>
+              <th>Preço</th>
+              <th></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="item">
+              <td>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="item.itemName" required>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{item.itemName}}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <p-dropdown [options]="['Marca Original','Marca Branca']" appendTo="body"
+                                [(ngModel)]="item.itemBrandType" [style]="{'width':'100%'}"></p-dropdown>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{item.itemBrandType}}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
                                         <span class="p-float-label">
-                                            <p-inputNumber [(ngModel)]="item.itemUnitsQuantity" [showButtons]="true" inputId="stacked" mode="decimal" [min]="1"></p-inputNumber>
+                                            <p-inputNumber [(ngModel)]="item.itemUnitsQuantity" [showButtons]="true"
+                                                           inputId="stacked" mode="decimal" [min]="1"></p-inputNumber>
                                         </span>
-                                    </ng-template>
-                                    <ng-template pTemplate="output">
-                                        {{item.itemUnitsQuantity}}
-                                    </ng-template>
-                                </p-cellEditor>
-                            </td>
-                            <td>
-                                <p-cellEditor>
-                                    <ng-template pTemplate="input">
-                                        <p-inputNumber [(ngModel)]="item.itemPrice" mode="currency" currency="EUR" locale="pt-PT"> </p-inputNumber>
-                                    </ng-template>
-                                    <ng-template pTemplate="output">
-                                        {{item.itemPrice | currency: 'EUR'}}
-                                    </ng-template>
-                                </p-cellEditor>
-                            </td>
-                            <td>
-                                <div class="flex align-items-center justify-content-center gap-2">
-                                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(item)" class="p-button-rounded p-button-text"></button>
-                                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(item, ri)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
-                                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(item, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{item.itemUnitsQuantity}}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td>
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <p-inputNumber [(ngModel)]="item.itemPrice" mode="currency" currency="EUR"
+                                   locale="pt-PT"></p-inputNumber>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    {{item.itemPrice | currency: 'EUR'}}
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td>
+                <div class="flex align-items-center justify-content-center gap-2">
+                  <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                          (click)="onRowEditInit(item)" class="p-button-rounded p-button-text"></button>
+                  <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                          (click)="onRowEditSave(item, ri)"
+                          class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                  <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                          (click)="onRowEditCancel(item, ri)"
+                          class="p-button-rounded p-button-text p-button-danger"></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
 
-        </ng-template>
+    </ng-template>
 
-        <ng-template pTemplate="footer">
-            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-            <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveOrder()"></button>
-        </ng-template>
-    </p-dialog>
+    <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+      <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveOrder()"></button>
+    </ng-template>
+  </p-dialog>
 </div>

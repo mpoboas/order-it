@@ -35,13 +35,13 @@ export class CreateOrderComponent implements OnInit {
     const itemWithoutName = this.orderData.items.find((item: { itemName: any; }) => !item.itemName);
     const itemWithoutBrand = this.orderData.items.find((item: { itemBrandType: any; }) => !item.itemBrandType);
     if (itemWithoutName) {
-      this.messageService.add({severity: 'error', summary: 'Erro', detail: 'O nome do produto não pode estar vazio!'});
+      this.messageService.add({severity: 'error', summary: 'Erro', detail: 'O nome do item não pode estar vazio!'});
       return;
     } else if (itemWithoutBrand) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
-        detail: `Seleciona a marca que prentendes do produto: ${itemWithoutBrand.itemName}!`
+        detail: `Seleciona a marca que prentendes do item: ${itemWithoutBrand.itemName}!`
       });
       return;
     }
@@ -51,7 +51,6 @@ export class CreateOrderComponent implements OnInit {
       this.addNoteToOrder();
     }
 
-    // For demonstration purposes, we'll just close the dialog
     this.addOrder();
     this.ref.close();
     this.messageService.add({severity: 'success', summary: 'Successo', detail: 'Pedido efetuado com sucesso!'});
@@ -131,6 +130,7 @@ export class CreateOrderComponent implements OnInit {
     this.orderService.updateOrder(orderId, {orderNote: this.orderData.orderNote}).subscribe(
       (response: any) => {
         console.log('Note added successfully', response);
+        this.orderService.updateOrdersTable();
       },
       (error: any) => {
         console.error('Error adding note', error);

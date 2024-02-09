@@ -24,6 +24,10 @@ const OrderSchema = new Schema(
         payerName: {
             type: String,
         },
+
+        receiverName: {
+            type: String,
+        },
     },
     {
         timestamps: true,

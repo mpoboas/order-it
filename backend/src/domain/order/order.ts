@@ -5,12 +5,14 @@ import { Guard } from '../../core/logic/Guard';
 import { ResponsibleName } from './responsibleName';
 import { OrderNote } from './orderNote';
 import {PayerName} from "./payerName";
+import {ReceiverName} from "./receiverName";
 
 interface OrderProps {
     orderNumber: number;
     orderNote?: OrderNote;
     responsibleName: ResponsibleName;
     payerName?: PayerName;
+    receiverName?: ReceiverName;
     orderPrice?: number;
 }
 
@@ -25,6 +27,10 @@ export class Order extends AggregateRoot<OrderProps> {
 
     get responsibleName(): ResponsibleName {
         return this.props.responsibleName;
+    }
+
+    get receiverName(): ReceiverName {
+        return this.props.receiverName;
     }
 
     get payerName(): PayerName {
@@ -60,5 +66,9 @@ export class Order extends AggregateRoot<OrderProps> {
 
     public updateOrderNote(orderNote: OrderNote) {
         this.props.orderNote = orderNote;
+    }
+
+    public updateReceiverName(receiverName: ReceiverName) {
+        this.props.receiverName = receiverName;
     }
 }

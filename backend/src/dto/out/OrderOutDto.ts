@@ -4,6 +4,7 @@ interface OrderOutDto {
     responsibleName: string;
     orderPrice: number;
     payerName: string;
+    receiverName?: string;
     orderNote?: string;
 }
 

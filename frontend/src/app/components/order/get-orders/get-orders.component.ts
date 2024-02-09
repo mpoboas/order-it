@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {MessageService, TreeNode} from 'primeng/api';
+import {MessageService} from 'primeng/api';
 import {OrderService} from 'src/app/services/order.service';
 import {UserService} from "../../../services/user.service";
 
@@ -25,7 +25,6 @@ export class GetOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.orderService.orderUpdated$.subscribe(() => {
       this.loadOrders();
-      console.log('Orders updated');
     });
     this.loadOrders();
   }

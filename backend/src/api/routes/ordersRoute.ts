@@ -40,6 +40,7 @@ export default (app: Router) => {
             body: Joi.object({
                 payerName: Joi.string().allow(null).allow(''),
                 orderNote: Joi.string().allow(null).allow(''),
+                receiverName: Joi.string().allow(null).allow(''),
             }),
         }),
         (req, res) => ctrl.editOrder(req, res),
