@@ -42,6 +42,30 @@ export class GetOrdersComponent implements OnInit {
     }
   }
 
+  onDeleteButtonClick(){
+    // A ideia era abrir outro modal para confirmar a exclusão
+    this.performDelete(this.selectedOrder);
+  }
+
+  onSaveOrderButtonClick(){
+    const orderData = {
+      orderNote: this.selectedOrder.orderNote,
+      receiverName: this.selectedOrder.receiverName,
+      payerName: this.selectedOrder.payerName,
+    }
+    this.orderService.updateOrder(this.selectedOrder.id, orderData).subscribe(() => {
+      this.orderService.updateOrdersTable();
+      this.orderDialog = false;
+    });
+  }
+
+  performDelete(order: any): void {
+    this.orderService.deleteOrder(order.id).subscribe(() => {
+      this.orderService.updateOrdersTable();
+      this.orderDialog = false;
+    });
+  }
+
   onRowExpand(event: any): void {
     const order = event.data;
     this.getOrderItems(order);

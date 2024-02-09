@@ -61,7 +61,7 @@
             <p-table [value]="orderItemsMap[order.id]" dataKey="item.id" *ngIf="orderItemsMap[order.id]">
               <ng-template pTemplate="header">
                 <tr>
-                  <th pSortableColumn="itemName">Produto
+                  <th pSortableColumn="itemName">Item
                     <p-sortIcon field="itemName"></p-sortIcon>
                   </th>
                   <th pSortableColumn="itemBrandType">Tipo de Marca
@@ -102,18 +102,11 @@
   <p-dialog [(visible)]="orderDialog" [modal]="true" [draggable]="false" header="Editar pedido" [modal]="true"
             [breakpoints]="{ '960px': '90vw' }" [style]="{ width: '60vw' }">
     <ng-template pTemplate="content">
-      <div class="field">
-                <span class="p-float-label mt-5">
-                    <input id="orderNote" pInputText type="text" [(ngModel)]="selectedOrder.orderNote"/>
-                    <label for="orderNote">Nota do pedido</label>
-                </span>
-
-      </div>
       <div class="card">
         <p-table [value]="orderItemsMap[selectedOrder.id]" dataKey="itemName" editMode="row">
           <ng-template pTemplate="header">
             <tr>
-              <th>Produto</th>
+              <th>Item</th>
               <th>Tipo de Marca</th>
               <th>Quantidade</th>
               <th>Preço</th>
@@ -184,11 +177,45 @@
         </p-table>
       </div>
 
+      <!-- Flex container for "Nota do pedido" and "Quem pagou" fields -->
+      <div class="flex justify-between mt-10">
+        <!-- Note Field -->
+        <div class="field">
+            <span class="p-float-label">
+              <input id="orderNote" pInputText type="text" [(ngModel)]="selectedOrder.orderNote"/>
+              <label for="orderNote">Nota do pedido</label>
+            </span>
+        </div>
+
+        <!-- Note Field -->
+        <div class="field">
+            <span class="p-float-label">
+              <input id="receiverName" pInputText type="text" [(ngModel)]="selectedOrder.receiverName"/>
+              <label for="orderNote">Quem vai receber o cash?</label>
+            </span>
+        </div>
+
+        <!-- "Quem pagou" Field -->
+        <div class="field">
+            <span class="p-float-label">
+              <input id="payerName" pInputText type="text" [(ngModel)]="selectedOrder.payerName"/>
+              <label for="payerName">Quem pagou?</label>
+            </span>
+        </div>
+      </div>
+
     </ng-template>
 
     <ng-template pTemplate="footer">
-      <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-      <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveOrder()"></button>
+      <!-- Button to Delete Order -->
+      <button pButton pRipple label="Eliminar Pedido" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-8"
+              (click)="onDeleteButtonClick()"></button>
+
+      <!-- Cancel Button -->
+      <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+
+      <!-- Save Button -->
+      <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="onSaveOrderButtonClick()"></button>
     </ng-template>
   </p-dialog>
 </div>

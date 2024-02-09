@@ -53,6 +53,12 @@ export default class OrderRepo implements IOrderRepo {
                     orderDocument.payerName = null;
                 }
 
+                if (order.receiverName) {
+                    orderDocument.receiverName = order.receiverName.value;
+                } else {
+                    orderDocument.receiverName = null;
+                }
+
                 await orderDocument.save();
                 return order;
             }

@@ -63,6 +63,10 @@ export class OrderService {
     return this.http.get(`${this.itemsBaseUrl}/${orderId}`);
   }
 
+  editOrder(orderId: any, orderData: any): Observable<any> {
+    return this.http.patch(`${this.ordersBaseUrl}/${orderId}`, orderData);
+  }
+
   // Mock data for demonstration purposes | TO BE DELETED
   private orders: any[] = [
     {orderNumber: 1, orderNote: 'This is a note', responsibleName: 'John Doe', payerName: 'Julinho'},

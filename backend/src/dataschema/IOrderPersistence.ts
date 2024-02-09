@@ -4,4 +4,5 @@ export interface IOrderPersistence {
     responsibleName: string;
     orderNote: string| null;
     payerName: string | null;
+    receiverName: string | null;
 }
