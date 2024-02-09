@@ -9,4 +9,6 @@ export default interface IItemRepo extends Repo<Item> {
     findAll(): Promise<Item[]>;
 
     findByOrderId(orderId: string): Promise<Item[]>;
+
+    deleteItemsByOrderId(orderId: string): Promise<void>;
 }

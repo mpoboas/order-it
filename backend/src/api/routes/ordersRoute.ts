@@ -39,4 +39,9 @@ export default (app: Router) => {
         }),
         (req, res) => ctrl.editOrder(req, res),
     );
+
+    route.delete(
+        '/:id',
+        (req, res) => ctrl.deleteOrder(req, res),
+    );
 };

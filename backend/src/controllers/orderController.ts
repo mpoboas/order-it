@@ -55,6 +55,19 @@ export default class OrderController implements IOrderController {
         return res.status(200).json(buildingDTO);
     }
 
+    public async deleteOrder(req: Request, res: Response) {
+        // Call the service to delete an order.
+        const result = await this.orderServiceInstance.deleteOrder(req.params.id);
+
+        // Handle any errors from the service.
+        if (result.isFailure) {
+            return this.returnError(result, res);
+        }
+
+        // If the service succeeds, return a 204 status.
+        return res.status(204).send();
+    }
+
     private returnError(result: Result<any>, res: Response) {
         const errorDto = Utils.convertToErrorDTO(result.errorValue());
         switch (result.failureType) {

@@ -9,7 +9,8 @@ import {CreateOrderComponent} from '../components/order/create-order/create-orde
   providedIn: 'root'
 })
 export class OrderService {
-  private baseUrl = environment.apiUrl + '/api/Orders';
+  private ordersBaseUrl = environment.apiUrl + '/api/Orders';
+  private itemsBaseUrl = environment.apiUrl + '/api/Items';
 
   constructor(private http: HttpClient, private dialogService: DialogService) {
   }
@@ -19,11 +20,28 @@ export class OrderService {
       header: 'Efetuar pedido',
       width: '50vh',
       styleClass: 'max-h-700 min-h-700 overflow-auto bg-blue-500',
+      closable: false,
     });
   }
 
   createOrder(orderData: any): Observable<any> {
-    return this.http.post(this.baseUrl, orderData);
+    return this.http.post(this.ordersBaseUrl, orderData);
+  }
+
+  deleteOrder(orderId: string): Observable<any> {
+    return this.http.delete(`${this.ordersBaseUrl}/${orderId}`);
+  }
+
+  updateOrder(orderId: any, orderData: any): Observable<any> {
+    return this.http.patch(`${this.ordersBaseUrl}/${orderId}`, orderData);
+  }
+
+  addItemToOrder(itemData: any): Observable<any> {
+    return this.http.post(`${this.itemsBaseUrl}`, itemData);
+  }
+
+  updateItemInOrder(itemData: any) {
+    return this.http.put(`${this.itemsBaseUrl}/${itemData.id}`, itemData);
   }
 
   // Mock data for demonstration purposes | TO BE DELETED
@@ -59,8 +77,6 @@ export class OrderService {
     for (const item of orderData.items) {
       this.items.push({...item, orderId: orderData.orderNumber});
     }
-    console.log('Order added:', orderData);
-    console.log('Orders:', this.orders);
   }
 
 
@@ -91,4 +107,6 @@ export class OrderService {
   getCurrentOrderNumber() {
     return localStorage.getItem('currentOrderNumber');
   }
+
+
 }

@@ -9,11 +9,13 @@ import {OrderMapper} from "../../mappers/orderMapper";
 import OrderEditDto from "../../dto/edit/OrderEditDto";
 import {PayerName} from "../../domain/order/payerName";
 import {OrderNote} from "../../domain/order/orderNote";
+import IItemRepo from "../IRepos/IItemRepo";
 
 @Service()
 export default class OrderService implements IOrderService {
     constructor(
         @Inject(config.repos.order.name) private orderRepo: IOrderRepo,
+        @Inject(config.repos.item.name) private itemRepo: IItemRepo,
     ) {
     }
 
@@ -108,6 +110,32 @@ export default class OrderService implements IOrderService {
             } else {
                 return Result.fail<OrderOutDto>(e.message, FailureType.DatabaseError);
             }
+        }
+    }
+
+    /**
+     * Deletes an order.
+     * @param id - The ID of the order to delete.
+     * @returns A promise that resolves to a Result object indicating success or failure.
+     */
+    public async deleteOrder(id: string): Promise<Result<void>> {
+        try {
+            // Check if the order exists
+            const order = await this.orderRepo.findById(id);
+            if (!order) {
+                return Result.fail<void>(`No Order found with id=${id}`, FailureType.EntityDoesNotExist);
+            }
+
+            // Delete all the items of the order
+            await this.itemRepo.deleteItemsByOrderId(id);
+
+            // If it exists, delete it
+            await this.orderRepo.delete(id);
+
+            return Result.ok<void>();
+        } catch (e) {
+            console.log(e);
+            return Result.fail<void>(e.message, FailureType.DatabaseError);
         }
     }
 }

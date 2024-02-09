@@ -9,4 +9,6 @@ export default interface IOrderRepo extends Repo<Order> {
     findAll(): Promise<Order[]>;
 
     findLastOrderNumber(): Promise<number>;
+
+    delete(orderId: string): Promise<void>;
 }

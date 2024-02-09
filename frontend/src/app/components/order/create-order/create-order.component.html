@@ -2,58 +2,71 @@
   <p class="mb-4 text-2xl font-bold">Pedido {{ orderData.orderNumber }}</p>
 
   <div class="space-y-3">
-      <div class="" *ngFor="let item of orderData.items; let i = index">
-          <p-panel header="Item {{ i + 1 }}">
-              <div class="p-field mt-2">
-                  <span class="p-float-label">
-                      <input id="itemName{{ i }}" pInputText type="text" [(ngModel)]="item.itemName" required #itemName="ngModel"
-                          [ngClass]="{'ng-invalid ng-dirty': itemName.invalid && itemName.dirty}" />
-                      <label for="itemName{{ i }}">Produto</label>
-                  </span>
-                  <div *ngIf="itemName.invalid && itemName.dirty" class="text-red-500">Nome do produto é obrigatório.</div>
-              </div>
+    <div class="" *ngFor="let item of orderData.items; let i = index">
+      <p-panel header="Item {{ i + 1 }}" >
 
-              <div class="p-field space-y-3 mb-9 mt-5">
-                  <label>Tipo de Marca</label>
-                  <div class="p-formgroup-inline">
-                      <div class="p-field-radiobutton">
-                          <p-radioButton name="itemBrandType{{ i }}" value="Marca Original" [(ngModel)]="item.itemBrandType" required
-                              #brandType="ngModel" [ngClass]="{'ng-invalid ng-dirty': brandType.invalid && brandType.dirty}"></p-radioButton>
-                          <label for="marcaOriginal{{ i }}">Marca Original</label>
-                      </div>
-                      <div class="p-field-radiobutton">
-                          <p-radioButton name="itemBrandType{{ i }}" value="Marca Branca" [(ngModel)]="item.itemBrandType"
-                              #brandType="ngModel" [ngClass]="{'ng-invalid ng-dirty': brandType.invalid && brandType.dirty}"></p-radioButton>
-                          <label for="marcaBranca{{ i }}">Marca Branca</label>
-                      </div>
-                  </div>
-                  <div *ngIf="brandType.invalid && brandType.dirty" class="text-red-500">Tipo de Marca é obrigatório.</div>
-              </div>
+        <div class="p-field mt-2">
+          <span class="p-float-label">
+            <input id="itemName{{ i }}" pInputText type="text" [(ngModel)]="item.itemName" required
+                   #itemName="ngModel"
+                   [ngClass]="{'ng-invalid ng-dirty': itemName.invalid && itemName.dirty}" [disabled]="isItemAdded(i)"/>
+            <label for="itemName{{ i }}">Item</label>
+          </span>
+          <div *ngIf="itemName.invalid && itemName.dirty" class="text-red-500">Nome do item é obrigatório.</div>
+        </div>
 
-              <div class="p-field space-y-3">
-                  <span class="p-float-label">
-                      <p-inputNumber [(ngModel)]="item.itemUnitsQuantity" [showButtons]="true" inputId="stacked" mode="decimal" [min]="1">
-                      </p-inputNumber>
-                      <label for="itemUnitsQuantity{{ i }}">Quantidade</label>
-                  </span>
-              </div>
-          </p-panel>
-      </div>
+        <div class="p-field space-y-3 mb-9 mt-5">
+          <label>Tipo de Marca</label>
+          <div class="p-formgroup-inline">
+            <div class="p-field-radiobutton mb-1.5">
+              <p-radioButton name="itemBrandType{{ i }}" value="ORIGINAL" [(ngModel)]="item.itemBrandType"
+                             required [disabled]="isItemAdded(i)"></p-radioButton>
+              <label for="marcaOriginal{{ i }}">Marca Original</label>
+            </div>
+            <div class="p-field-radiobutton">
+              <p-radioButton name="itemBrandType{{ i }}" value="MARCA_BRANCA"
+                             [(ngModel)]="item.itemBrandType" [disabled]="isItemAdded(i)"></p-radioButton>
+              <label for="marcaBranca{{ i }}">Marca Branca</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-field space-y-3 mb-3.5">
+          <span class="p-float-label">
+            <p-inputNumber [(ngModel)]="item.itemUnitsQuantity" [showButtons]="true" inputId="stacked"
+                           mode="decimal" [min]="1" [disabled]="isItemAdded(i)">
+            </p-inputNumber>
+            <label for="itemUnitsQuantity{{ i }}">Quantidade</label>
+          </span>
+        </div>
+
+
+        <div class="p-field space-y-5">
+          <p-button (click)="addItemToOrder(item, i)"
+                    label="Adicionar ao pedido"
+                    class="mt-5"
+                    [disabled]="!isItemValid(item) || isItemAdded(i)">
+          </p-button>
+        </div>
+
+
+      </p-panel>
+    </div>
   </div>
 
   <div class="p-field my-5">
-      <p-button (click)="addItem()" label="Adicionar outro produto"></p-button>
+    <p-button (click)="addItemForm()" label="Adicionar item"></p-button>
   </div>
 
   <div class="p-field mb-5 mt-7">
-      <span class="p-float-label">
-          <input id="orderNote" pInputText type="text" [(ngModel)]="orderData.orderNote" />
-          <label for="orderNote">Nota do pedido</label>
-      </span>
+    <span class="p-float-label">
+      <input id="orderNote" pInputText type="text" [(ngModel)]="orderData.orderNote"/>
+      <label for="orderNote">Nota do pedido</label>
+    </span>
   </div>
 
   <div class="flex flex-row justify-between items-center my-5 space-x-3">
     <p-button (click)="cancel()" label="Cancelar" severity="secondary"></p-button>
-    <p-button (click)="createOrder()" label="Finalizar pedido" [disabled]="!isOrderValid()"></p-button>
+    <p-button (click)="finalizeOrder()" label="Finalizar pedido" [disabled]="!isOrderValid()"></p-button>
   </div>
 </div>

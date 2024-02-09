@@ -68,4 +68,9 @@ export default class ItemRepo implements IItemRepo {
         const items = itemRecords.map(ItemMapper.toDomain);
         return Promise.all(items);
     }
+
+    public async deleteItemsByOrderId(orderId: string): Promise<void> {
+        const query = {orderId: orderId};
+        await this.itemSchema.deleteMany(query);
+    }
 }

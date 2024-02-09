@@ -53,11 +53,11 @@ export class UserComponent implements OnInit {
         console.log('Order created successfully', response);
         this.orderService.setCurrentOrderId(response.id);
         this.orderService.setCurrentOrderNumber(response.orderNumber);
+        this.orderService.openCreateOrderDialog();
       },
       (error: any) => {
         console.error('Error creating order', error);
       }
     );
-    this.orderService.openCreateOrderDialog();
   }
 }

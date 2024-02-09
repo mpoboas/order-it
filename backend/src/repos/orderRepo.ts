@@ -15,6 +15,7 @@ export default class OrderRepo implements IOrderRepo {
     public async findById(orderId: string): Promise<Order> {
         const query = {id: orderId};
         const orderDocument = await this.orderSchema.findOne(query);
+        if (orderDocument === null) return null;
         return OrderMapper.toDomain(orderDocument);
     }
 
@@ -103,5 +104,9 @@ export default class OrderRepo implements IOrderRepo {
         if (orderRecord != null) {
             return orderRecord.orderNumber;
         } else return 0;
+    }
+
+    public async delete(orderId: string): Promise<void> {
+        await this.orderSchema.deleteOne({id: orderId});
     }
 }

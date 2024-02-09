@@ -21,4 +21,10 @@ export default interface IOrderService {
      * @param orderEditDto contains the order data to edit
      */
     editOrder(id: string, orderEditDto: OrderEditDto): Promise<Result<OrderOutDto>>;
+
+    /**
+     * Deletes an order.
+     * @param id the order id to delete
+     */
+    deleteOrder(id: string): Promise<Result<void>>;
 }
