@@ -69,6 +69,23 @@ export default class OrderService implements IOrderService {
     }
 
     /**
+     * Lists all orders by responsible name.
+     * @param responsibleName - The responsible name to list all orders.
+     * @returns A promise that resolves to an array of orders Dto's.
+     */
+    public async listOrderByResponsibleName(responsibleName: string): Promise<OrderOutDto[]> {
+        try {
+            // Get all orders from the database but add the field orderPrice by looking for the items of each order and summing their prices to get the total order price
+            const orders = await this.orderRepo.findByResponsibleName(responsibleName);
+
+            // Return ordersDto's
+            return orders.map(order => OrderMapper.toDTO(order) as OrderOutDto);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    /**
      * Edits an existing order.
      * @param id - The ID of the order to edit.
      * @param orderEditDto - The updated order DTO.

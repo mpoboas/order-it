@@ -6,6 +6,8 @@ export default interface IOrderController {
 
     listOrders(res: Response): Promise<Response>;
 
+    listOrderByResponsibleName(req: Request, res: Response): Promise<Response>;
+
     editOrder(req: Request, res: Response): Promise<Response>;
 
     deleteOrder(req: Request, res: Response): Promise<Response>;

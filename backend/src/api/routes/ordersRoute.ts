@@ -23,6 +23,11 @@ export default (app: Router) => {
         (req, res) => ctrl.createOrder(req, res),
     );
 
+    route.get(
+        '/:responsibleName',
+        (req, res) => ctrl.listOrderByResponsibleName(req, res),
+    );
+
 
     route.get(
         '',

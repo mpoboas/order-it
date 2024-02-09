@@ -16,6 +16,12 @@ export default interface IOrderService {
     listOrders(): Promise<OrderOutDto[]>;
 
     /**
+     * Lists all orders by responsible name.
+     * @param responsibleName the responsible name to list all orders
+     */
+    listOrderByResponsibleName(responsibleName: string): Promise<OrderOutDto[]>;
+
+    /**
      * Edits an order.
      * @param id the order id to edit
      * @param orderEditDto contains the order data to edit

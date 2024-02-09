@@ -106,6 +106,13 @@ export default class OrderRepo implements IOrderRepo {
         } else return 0;
     }
 
+    public async findByResponsibleName(responsibleName: string): Promise<Order[]> {
+        const query = {responsibleName: responsibleName};
+        const orderRecords = await this.orderSchema.find(query);
+        const orders = orderRecords.map(OrderMapper.toDomain);
+        return Promise.all(orders);
+    }
+
     public async delete(orderId: string): Promise<void> {
         await this.orderSchema.deleteOne({id: orderId});
     }

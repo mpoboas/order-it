@@ -38,6 +38,14 @@ export default class OrderController implements IOrderController {
         return res.json(orders).status(200);
     }
 
+    public async listOrderByResponsibleName(req: Request, res: Response) {
+        // Call the service to list all orders by responsible name.
+        const orders = await this.orderServiceInstance.listOrderByResponsibleName(req.params.responsibleName);
+
+        // If the request succeeds, return the orders.
+        return res.json(orders).status(200);
+    }
+
     public async editOrder(req: Request, res: Response) {
         // Call the service to edit an order.
         const orderOrError = (await this.orderServiceInstance.editOrder(
