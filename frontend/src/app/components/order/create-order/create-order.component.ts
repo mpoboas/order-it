@@ -11,7 +11,7 @@ import { OrderService } from 'src/app/services/order.service';
 })
 export class CreateOrderComponent implements OnInit {
   orderData: any = {
-    orderNumber: this.generateOrderNumber(),
+    orderNumber: this.orderService.getCurrentOrderNumber(),
     orderNote: '',
     payerName: '',
     responsibleName: '',
@@ -32,11 +32,6 @@ export class CreateOrderComponent implements OnInit {
     let storedValue = localStorage.getItem('responsibleName');
     this.orderData.responsibleName = storedValue ? JSON.parse(storedValue).name : '';
     this.addItem();
-  }
-
-  // MOCK | TO BE DELETED
-  generateOrderNumber(): number {
-    return Math.floor(Math.random() * 1000) + 1;
   }
 
   createOrder(): void {
