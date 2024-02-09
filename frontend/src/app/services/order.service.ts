@@ -44,6 +44,14 @@ export class OrderService {
     return this.http.put(`${this.itemsBaseUrl}/${itemData.id}`, itemData);
   }
 
+  getOrdersWithItems(): Observable<any> {
+    return this.http.get(this.ordersBaseUrl);
+  }
+
+  getOrderItems(orderId: string): Observable<any> {
+    return this.http.get(`${this.itemsBaseUrl}/${orderId}`);
+  }
+
   // Mock data for demonstration purposes | TO BE DELETED
   private orders: any[] = [
     {orderNumber: 1, orderNote: 'This is a note', responsibleName: 'John Doe', payerName: 'Julinho'},
@@ -77,19 +85,6 @@ export class OrderService {
     for (const item of orderData.items) {
       this.items.push({...item, orderId: orderData.orderNumber});
     }
-  }
-
-
-  // Mock method to get orders with associated items
-  getOrdersWithItems(): Observable<any[]> {
-    const ordersWithItems = this.orders.map(order => {
-      return {
-        ...order,
-        items: this.items.filter(item => item.orderId === order.orderNumber)
-      };
-    });
-
-    return of(ordersWithItems);
   }
 
   setCurrentOrderId(orderId: string) {

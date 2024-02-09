@@ -21,7 +21,7 @@ export default {
   /**
    * That long string from mlab
    */
-  databaseURL: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/orderit',
+  databaseURL: process.env.MONGODB_URI || 'mongodb://mongoadmin:e6593b4fe08327a225a55abf@vsgate-s1.dei.isep.ipp.pt:10389/?authMechanism=DEFAULT',
 
   /**
    * Your secret sauce

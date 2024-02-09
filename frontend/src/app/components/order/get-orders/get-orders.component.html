@@ -1,12 +1,13 @@
 <div class="p-card my-4 p-[2rem] border-md">
-    <p-table [value]="orders" dataKey="orderNumber" [tableStyle]="{ 'min-width': '60rem' }" class="min-w-full">
+    <p-table [value]="orders" dataKey="orderNumber" [tableStyle]="{ 'min-width': '60rem' }" class="min-w-full" (onRowExpand)="onRowExpand($event)">
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 5rem"></th>
                 <th pSortableColumn="orderNumber"># Pedido <p-sortIcon field="orderNumber"></p-sortIcon></th>
-                <th>Nota do pedido</th>
-                <th>Pagar a</th>
                 <th>Total</th>
+                <th>Nota do pedido</th>
+                <!-- <th>Pagar a</th> -->
+                <th>Quem pagou?</th>
                 <th *ngIf="isAdmin()">Ações</th>
             </tr>
         </ng-template>
@@ -16,9 +17,23 @@
                     <button type="button" pButton pRipple [pRowToggler]="order" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
                 </td>
                 <td>{{ order.orderNumber }}</td>
-                <td>{{ order.orderNote }}</td>
-                <td>{{ order.payerName }}</td>
-                <td>{{ calculateTotal(order) | currency: 'EUR' }}</td>
+                <td>{{ order.orderPrice | currency: 'EUR' }}</td>
+                <td>
+                    <ng-container *ngIf="order.orderNote; else noNote">
+                        {{ order.orderNote }}
+                    </ng-container>
+                    <ng-template #noNote>
+                        <p-tag [style]="{'background-color': 'gray', 'color': 'white'}">Sem nota</p-tag>
+                    </ng-template>
+                </td>
+                <td>
+                    <ng-container *ngIf="order.payerName === 'NPY'; else notNPY">
+                        <p-tag severity="danger">Por pagar</p-tag>
+                    </ng-container>
+                    <ng-template #notNPY>
+                        {{ order.payerName }}
+                    </ng-template>
+                </td>
                 <td *ngIf="isAdmin()">
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editOrder(order)"></button>
                 </td>
@@ -28,7 +43,7 @@
             <tr>
                 <td colspan="6">
                     <div class="p-3">
-                        <p-table [value]="order.items" dataKey="itemId">
+                        <p-table [value]="orderItemsMap[order.id]" dataKey="item.id" *ngIf="orderItemsMap[order.id]">
                             <ng-template pTemplate="header">
                                 <tr>
                                     <th pSortableColumn="itemName">Produto <p-sortIcon field="itemName"></p-sortIcon></th>
@@ -61,13 +76,13 @@
         <ng-template pTemplate="content">
             <div class="field">
                 <span class="p-float-label mt-5">
-                    <input id="orderNote" pInputText type="text" readonly [(ngModel)]="selectedOrder.orderNote" />
+                    <input id="orderNote" pInputText type="text" [(ngModel)]="selectedOrder.orderNote" />
                     <label for="orderNote">Nota do pedido</label>
                 </span>
                 
             </div>
             <div class="card">
-                <p-table [value]="selectedOrder.items" dataKey="itemName" editMode="row">
+                <p-table [value]="orderItemsMap[selectedOrder.id]" dataKey="itemName" editMode="row">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>Produto</th>

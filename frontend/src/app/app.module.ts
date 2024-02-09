@@ -28,6 +28,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { UserService } from './services/user.service';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { UserService } from './services/user.service';
     ToastModule,
     DialogModule,
     DropdownModule,
+    TagModule,
   ],
   providers: [DialogService, MessageService, ConfirmationService, OrderService, UserService],
   bootstrap: [AppComponent]

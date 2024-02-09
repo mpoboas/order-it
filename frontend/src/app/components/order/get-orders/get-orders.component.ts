@@ -14,20 +14,12 @@ export class GetOrdersComponent implements OnInit {
   inAdminPage: boolean = true;
   selectedOrder: any;
   orders: any[] = [];
-  orderItems: { [key: number]: any[] } = {};
-  cols: any[];
+  orderItemsMap: { [orderId: number]: any[] } = {};
   editedItem: any = {};
   clonedItems: { [key: number]: any } = {};
 
 
-  constructor(private orderService: OrderService, private messageService: MessageService) {
-    this.cols = [
-      { field: 'orderNumber', header: '#' },
-      { field: 'orderNote', header: 'Nota' },
-      { field: 'payerName', header: 'Pagar a' },
-      { field: 'total', header: 'Total' },
-    ];
-  }
+  constructor(private orderService: OrderService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.orderService.getOrdersWithItems().subscribe(orders => {
@@ -35,9 +27,24 @@ export class GetOrdersComponent implements OnInit {
     });
   }
 
-  calculateTotal(order: any): number {
-    // Implement your logic to calculate the total from items' prices
-    return order.items.reduce((total: any, item: { itemPrice: any; itemUnitsQuantity: any }) => total + ((item.itemPrice || 0) * (item.itemUnitsQuantity || 0)), 0);
+  onRowExpand(event: any): void {
+    const order = event.data;
+    this.getOrderItems(order);
+  }
+
+  getOrderItems(order: any): void {
+    // Check if order items are already fetched, if not fetch them
+    if (!this.orderItemsMap[order.id]) {
+      console.log('Fetching order items for order', order);
+      this.orderService.getOrderItems(order.id).subscribe(
+        (response: any) => {
+          this.orderItemsMap[order.id] = response;
+        },
+        (error: any) => {
+          console.error('Error getting order items', error);
+        }
+      );
+    }
   }
 
   saveOrder() {
@@ -65,6 +72,7 @@ export class GetOrdersComponent implements OnInit {
   
   editOrder(order: any) {
     this.selectedOrder = { ...order };
+    this.getOrderItems(order);
     this.orderDialog = true;
   }
 
