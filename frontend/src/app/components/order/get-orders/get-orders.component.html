@@ -57,7 +57,7 @@
         </ng-template>
     </p-table>
 
-    <p-dialog [(visible)]="orderDialog" [modal]="true" [draggable]="false" header="Editar pedido" [modal]="true" styleClass="p-fluid">
+    <p-dialog [(visible)]="orderDialog" [modal]="true" [draggable]="false" header="Editar pedido" [modal]="true" [breakpoints]="{ '960px': '90vw' }" [style]="{ width: '60vw' }">
         <ng-template pTemplate="content">
             <div class="field">
                 <span class="p-float-label mt-5">
@@ -67,7 +67,7 @@
                 
             </div>
             <div class="card">
-                <p-table [value]="selectedOrder.items" dataKey="itemName" editMode="row" class="min-w-full">
+                <p-table [value]="selectedOrder.items" dataKey="itemName" editMode="row">
                     <ng-template pTemplate="header">
                         <tr>
                             <th>Produto</th>
