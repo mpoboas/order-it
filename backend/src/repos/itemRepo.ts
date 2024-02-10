@@ -54,6 +54,9 @@ export default class ItemRepo implements IItemRepo {
                 } else {
                     itemDocument.itemPrice = null;
                 }
+                itemDocument.itemBrandType = item.brandType;
+                itemDocument.itemName = item.name.value;
+                itemDocument.itemUnitsQuantity = item.unitsQuantity.numberOfUnits;
 
                 await itemDocument.save();
                 return item;
