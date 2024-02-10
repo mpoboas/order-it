@@ -1,4 +1,5 @@
 <div class="p-card my-4 p-[2rem] border-md">
+<ng-container *ngIf="isAdminPage && allowedAdminAccess || !isAdminPage">
   <p-table [value]="orders" dataKey="orderNumber" [tableStyle]="{ 'min-width': '60rem' }" class="min-w-full"
            (onRowExpand)="onRowExpand($event)" *ngIf="orders.length > 0">
     <ng-template pTemplate="header">
@@ -56,6 +57,7 @@
         </td>
       </tr>
     </ng-template>
+    
     <ng-template pTemplate="rowexpansion" let-order>
       <tr>
         <td colspan="6">
@@ -79,10 +81,22 @@
               </ng-template>
               <ng-template pTemplate="body" let-item>
                 <tr>
-                  <td>{{ item.itemName }}</td>
-                  <td>{{item.itemBrandType === 'ORIGINAL' ? 'Marca Original' : 'Marca Branca'}}</td>
-                  <td>{{ item.itemUnitsQuantity }}</td>
-                  <td>{{ item.itemPrice | currency: 'EUR' }}</td>
+                    <td>{{ item.itemName }}</td>
+                    <td>
+                        <ng-container *ngIf="item.itemBrandType === 'MARCA_BRANCA'; else originalBrand">
+                            <p-tag [style]="{'background-color': 'gray', 'color': 'white'}">Marca Branca</p-tag>
+                        </ng-container>
+                        <ng-template #originalBrand>
+                            <ng-container *ngIf="item.itemBrandType === 'ORIGINAL'; else otherBrand">
+                                <p-tag [style]="{'background-color': 'mediumpurple', 'color': 'white'}">Marca Original</p-tag>
+                            </ng-container>
+                            <ng-template #otherBrand>
+                                <!-- Handle other cases here if needed -->
+                            </ng-template>
+                        </ng-template>
+                    </td>
+                    <td>{{ item.itemUnitsQuantity }}</td>
+                    <td>{{ item.itemPrice | currency: 'EUR' }}</td>
                 </tr>
               </ng-template>
               <ng-template pTemplate="emptymessage">
@@ -96,6 +110,11 @@
       </tr>
     </ng-template>
   </p-table>
+  <ng-container *ngIf="isAdminPage">
+    <p-paginator [rows]="10" [totalRecords]="orders.length" [rowsPerPageOptions]="[10, 25, 50]"></p-paginator>
+  </ng-container>
+</ng-container>
+<p *ngIf="!allowedAdminAccess && isAdminPage">Ainda não tens acesso a estes dados.</p>
 
 
   <p *ngIf="orders.length === 0 && isAdminPage">Ainda não há pedidos.</p>
@@ -134,9 +153,14 @@
                       [options]="[{label: 'Marca Original', value: 'ORIGINAL'}, {label: 'Marca Branca', value: 'MARCA_BRANCA'}]"
                       appendTo="body" [(ngModel)]="item.itemBrandType"></p-dropdown>
                   </ng-template>
-                  <ng-template pTemplate="output">
-                    {{item.itemBrandType === 'ORIGINAL' ? 'Marca Original' : 'Marca Branca'}}
-                  </ng-template>
+                <ng-template pTemplate="output">
+                    <ng-container *ngIf="item.itemBrandType === 'ORIGINAL'; else otherBrand">
+                        <p-tag [style]="{'background-color': 'mediumpurple', 'color': 'white'}">Marca Original</p-tag>
+                    </ng-container>
+                    <ng-template #otherBrand>
+                        <p-tag [style]="{'background-color': 'gray', 'color': 'white'}">Marca Branca</p-tag>
+                    </ng-template>
+                </ng-template>
                 </p-cellEditor>
               </td>
               <td>

@@ -1,20 +1,26 @@
-<html class="scroll-smooth">
-  <div class="container mx-auto my-auto">
-    <div class="p-5">
-      <div class="p-3">
-        <a href="/" class="flex flex-row space-x-3">
-          <img src="favicon.ico" alt="Order It!" class="h-16" />
-          <p class="text-5xl font-extrabold">Order It!</p>
-        </a>
+<html class="scroll-smooth flex flex-col min-h-screen justify-between">
+  <div class="bg-gradient-to-r from-indigo-600 to-purple-700">
+    <div class="container mx-auto p-3">
+      <a href="/" class="flex flex-row space-x-3">
+        <img src="favicon.ico" alt="Order It!" class="sm:h-16 h-11" />
+        <p class="sm:text-5xl text-3xl  font-extrabold drop-shadow-md">Order It!</p>
+      </a>
+    </div>  
+  </div>
+  <!-- Router Outlet -->
+  <div class="flex-grow">
+    <router-outlet></router-outlet>
+  </div>
+
+  <!-- Sticker Footer -->
+  <footer class="bg-gray-900 py-7">
+    <div class="mx-auto max-w-7xl px-6 md:flex md:items-center md:justify-between lg:px-8">
+      <div class="flex justify-center space-x-6 md:order-2">
+        
       </div>
-      <div class="space-x-4">
-        <p-button routerLink="/url-super-secreto" routerLinkActive="active" label="Admin"></p-button>
-        <p-button routerLink="/pedidos" routerLinkActive="active" label="User"></p-button>
-      </div>
-      <p-divider></p-divider>
-      <div>
-        <router-outlet></router-outlet>
+      <div class="mt-8 md:order-1 md:mt-0 ">
+        <p class="text-center text-sm leading-5 text-gray-500">&copy; 2024 Departamento Financeiro da Clipóvoa. Todos os direitos reservados.</p>
       </div>
     </div>
-  </div>
+  </footer>
 </html>

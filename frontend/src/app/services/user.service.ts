@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class UserService {
   private readonly responsibleLocalStorageKey = 'responsibleName';
   private readonly adminLocalStorageKey = 'adminName';
+  private readonly allowedAdminAccessKey = 'allowedAdminAccess';
 
   getResponsibleName(): string | null {
     return this.getNameFromLocalStorage(this.responsibleLocalStorageKey);
@@ -47,5 +48,13 @@ export class UserService {
 
   private clearNameInLocalStorage(key: string): void {
     localStorage.removeItem(key);
+  }
+
+  getAllowedAdminAccess(): boolean {
+    return localStorage.getItem(this.allowedAdminAccessKey) === 'true';
+  }
+
+  setAllowedAdminAccess(allowed: boolean): void {
+    localStorage.setItem(this.allowedAdminAccessKey, allowed.toString());
   }
 }

@@ -1,21 +1,33 @@
-<div *ngIf="adminName" class="my-5 flex w-full justify-between items-center">
-    <div>
-      <p class="text-4xl font-bold">Mékié, <a class="bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">{{ adminName }}</a></p>
+<div class="container mx-auto my-auto p-3">
+  <div *ngIf="adminName" class="my-5 flex w-full justify-between items-center">
+      <div>
+        <p class="text-4xl font-bold">Mékié, <a class="bg-gradient-to-r from-violet-600 to-purple-500 bg-clip-text text-transparent">{{ adminName }}</a></p>
+      </div>
+      <!-- <div class="">
+        <p-button label="Resetar nome" (click)="resetResponsibleName()"></p-button>
+      </div> -->
     </div>
-    <!-- <div class="">
-      <p-button label="Resetar nome" (click)="resetResponsibleName()"></p-button>
-    </div> -->
-  </div>
-<div>
-    <p-toast position="bottom-right"></p-toast>
-    <app-get-orders [isAdminPage]="true"></app-get-orders>
-  </div>
-<p-dialog *ngIf="!adminName" header="Olá administrador!" [(visible)]="displayDialog" [closable]="false" [modal]="true" [draggable]="false">
+  <div>
+      <p-toast position="bottom-right"></p-toast>
+      <app-get-orders [isAdminPage]="true"></app-get-orders>
+    </div>
+  <p-dialog header="Olá administrador!" [(visible)]="displayAdminDialog" [closable]="false" [modal]="true" [draggable]="false">
     <div class="grid grid-cols-1 justify-center justify-items-center space-y-8">
-        <span class="p-float-label mt-5">
-        <input id="adminName" type="text" pInputText [(ngModel)]="inputAdminName" />
+      <span class="p-float-label mt-5">
+        <input id="adminName" type="text" pInputText [(ngModel)]="inputAdminName" required />
         <label for="adminName">Nome</label>
-        </span>
-        <p-button label="Ok" (click)="setAdminName()"></p-button>
+      </span>
+      <p-button label="Ok" (click)="inputAdminName && setAdminName()" [disabled]="!inputAdminName"></p-button>
     </div>
-</p-dialog>
+  </p-dialog>
+
+  <p-dialog header="Qual é o código?" [(visible)]="displayPasswordDialog" [closable]="false" [modal]="true" [draggable]="false">
+    <div class="grid grid-cols-1 justify-center justify-items-center space-y-8">
+      <span class="p-float-label mt-5">
+        <p-password [(ngModel)]="inputPassword" [feedback]="false" [toggleMask]="true"></p-password>
+        <label for="password">Password</label>
+    </span>
+      <p-button label="Ok" (click)="validatePassword()"></p-button>
+    </div>
+  </p-dialog>
+</div>

@@ -12,6 +12,7 @@ export class GetOrdersComponent implements OnInit {
   @Input() isAdminPage: any;
   orderDialog: boolean = false;
   inAdminPage: boolean = true;
+  allowedAdminAccess: boolean = false;
   selectedOrder: any;
   orders: any[] = [];
   orderItemsMap: { [orderId: number]: any[] } = {};
@@ -23,6 +24,8 @@ export class GetOrdersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.allowedAdminAccess = this.userService.getAllowedAdminAccess();
+
     this.orderService.orderUpdated$.subscribe(() => {
       this.loadOrders();
     });

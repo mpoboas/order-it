@@ -29,6 +29,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { UserService } from './services/user.service';
 import { TagModule } from 'primeng/tag';
+import { PasswordModule } from 'primeng/password';
+import { HeroComponent } from './components/hero.component';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import { TagModule } from 'primeng/tag';
     EditOrderComponent,
     GetOrdersComponent,
     AdminComponent,
-    UserComponent
+    UserComponent,
+    HeroComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +62,8 @@ import { TagModule } from 'primeng/tag';
     DialogModule,
     DropdownModule,
     TagModule,
+    PasswordModule,
+    PaginatorModule,
   ],
   providers: [DialogService, MessageService, ConfirmationService, OrderService, UserService],
   bootstrap: [AppComponent]
