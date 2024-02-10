@@ -8,6 +8,7 @@
           <p-sortIcon field="orderNumber"></p-sortIcon>
         </th>
         <th>Total</th>
+        <th *ngIf="isAdmin()">Responsável</th>
         <th>Nota do pedido</th>
         <th>Pagar a</th>
         <th>Quem pagou?</th>
@@ -23,6 +24,7 @@
         </td>
         <td>{{ order.orderNumber }}</td>
         <td>{{ order.orderPrice | currency: 'EUR' }}</td>
+        <td *ngIf="isAdmin()">{{ order.responsibleName }}</td>
         <td>
           <ng-container *ngIf="order.orderNote; else noNote">
             {{ order.orderNote }}
@@ -78,7 +80,7 @@
               <ng-template pTemplate="body" let-item>
                 <tr>
                   <td>{{ item.itemName }}</td>
-                  <td>{{ item.itemBrandType }}</td>
+                  <td>{{item.itemBrandType === 'ORIGINAL' ? 'Marca Original' : 'Marca Branca'}}</td>
                   <td>{{ item.itemUnitsQuantity }}</td>
                   <td>{{ item.itemPrice | currency: 'EUR' }}</td>
                 </tr>
@@ -99,7 +101,7 @@
   <p *ngIf="orders.length === 0 && isAdminPage">Ainda não há pedidos.</p>
   <p *ngIf="orders.length === 0 && !isAdminPage">Faz o teu primeiro pedido :)</p>
 
-  <p-dialog [(visible)]="orderDialog" [modal]="true" [draggable]="false" header="Editar pedido" [modal]="true"
+  <p-dialog [(visible)]="orderDialog" [modal]="true" [draggable]="false" [closable]="false" header="Editar pedido" [modal]="true"
             [breakpoints]="{ '960px': '90vw' }" [style]="{ width: '60vw' }">
     <ng-template pTemplate="content">
       <div class="card">
@@ -113,7 +115,7 @@
               <th></th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
+          <ng-template pTemplate="body" let-item let-editing="editing" let-rowIndex="rowIndex">
             <tr [pEditableRow]="item">
               <td>
                 <p-cellEditor>
@@ -128,11 +130,12 @@
               <td>
                 <p-cellEditor>
                   <ng-template pTemplate="input">
-                    <p-dropdown [options]="['Marca Original','Marca Branca']" appendTo="body"
-                                [(ngModel)]="item.itemBrandType" [style]="{'width':'100%'}"></p-dropdown>
+                    <p-dropdown
+                      [options]="[{label: 'Marca Original', value: 'ORIGINAL'}, {label: 'Marca Branca', value: 'MARCA_BRANCA'}]"
+                      appendTo="body" [(ngModel)]="item.itemBrandType"></p-dropdown>
                   </ng-template>
                   <ng-template pTemplate="output">
-                    {{item.itemBrandType}}
+                    {{item.itemBrandType === 'ORIGINAL' ? 'Marca Original' : 'Marca Branca'}}
                   </ng-template>
                 </p-cellEditor>
               </td>
@@ -165,10 +168,10 @@
                   <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
                           (click)="onRowEditInit(item)" class="p-button-rounded p-button-text"></button>
                   <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
-                          (click)="onRowEditSave(item, ri)"
+                          (click)="onItemEditSave(item)"
                           class="p-button-rounded p-button-text p-button-success mr-2"></button>
                   <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
-                          (click)="onRowEditCancel(item, ri)"
+                          (click)="onRowEditCancel(item, rowIndex)"
                           class="p-button-rounded p-button-text p-button-danger"></button>
                 </div>
               </td>
@@ -208,14 +211,15 @@
 
     <ng-template pTemplate="footer">
       <!-- Button to Delete Order -->
-      <button pButton pRipple label="Eliminar Pedido" icon="pi pi-trash" class="p-button-rounded p-button-danger mt-8"
+      <button pButton pRipple label="Eliminar Pedido" icon="pi pi-trash mr-1.5" class="p-button-rounded p-button-danger mt-8"
               (click)="onDeleteButtonClick()"></button>
 
       <!-- Cancel Button -->
       <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
 
       <!-- Save Button -->
-      <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="onSaveOrderButtonClick()"></button>
+      <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+              (click)="onSaveOrderButtonClick()"></button>
     </ng-template>
   </p-dialog>
 </div>

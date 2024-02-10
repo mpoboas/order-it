@@ -47,8 +47,8 @@ export class OrderService {
     return this.http.post(`${this.itemsBaseUrl}`, itemData);
   }
 
-  updateItemInOrder(itemData: any) {
-    return this.http.put(`${this.itemsBaseUrl}/${itemData.id}`, itemData);
+  editItem(itemId: any, itemData: any) {
+    return this.http.put(`${this.itemsBaseUrl}/${itemId}`, itemData);
   }
 
   getOrders(): Observable<any> {

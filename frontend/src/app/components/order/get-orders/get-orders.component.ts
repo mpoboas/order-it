@@ -42,12 +42,12 @@ export class GetOrdersComponent implements OnInit {
     }
   }
 
-  onDeleteButtonClick(){
+  onDeleteButtonClick() {
     // A ideia era abrir outro modal para confirmar a exclusão
     this.performDelete(this.selectedOrder);
   }
 
-  onSaveOrderButtonClick(){
+  onSaveOrderButtonClick() {
     const orderData = {
       orderNote: this.selectedOrder.orderNote,
       receiverName: this.selectedOrder.receiverName,
@@ -141,9 +141,19 @@ export class GetOrdersComponent implements OnInit {
 
   isAdmin(): boolean {
     let storedValue = localStorage.getItem('adminName');
-    if (storedValue && JSON.parse(storedValue).name && this.isAdminPage) {
-      return true;
-    }
-    return false;
+    return !!(storedValue && JSON.parse(storedValue).name && this.isAdminPage);
+  }
+
+  onItemEditSave(item: any) {
+    const itemData = {
+      itemName: item.itemName,
+      itemBrandType: item.itemBrandType,
+      itemUnitsQuantity: item.itemUnitsQuantity,
+      itemPrice: item.itemPrice
+    };
+    this.orderService.editItem(item.id, itemData).subscribe(() => {
+      this.messageService.add({severity: 'success', summary: 'Success', detail: 'Item atualizado'});
+      this.orderService.updateOrdersTable();
+    });
   }
 }
