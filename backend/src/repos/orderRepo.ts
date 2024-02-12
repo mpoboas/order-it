@@ -113,8 +113,43 @@ export default class OrderRepo implements IOrderRepo {
     }
 
     public async findByResponsibleName(responsibleName: string): Promise<Order[]> {
-        const query = {responsibleName: responsibleName};
-        const orderRecords = await this.orderSchema.find(query);
+        const query = { responsibleName: responsibleName };
+    
+        const orderRecords = await this.orderSchema.aggregate([
+            {
+                $match: query
+            },
+            {
+                $lookup: {
+                    from: 'items',
+                    localField: 'id',
+                    foreignField: 'orderId',
+                    as: 'items'
+                }
+            },
+            {
+                $addFields: {
+                    orderPrice: {
+                        $reduce: {
+                            input: "$items",
+                            initialValue: 0,
+                            in: {
+                                $add: [
+                                    "$$value",
+                                    { $multiply: ["$$this.itemPrice", "$$this.itemUnitsQuantity"] }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    orderPrice: { $round: ["$orderPrice", 2] }
+                }
+            }
+        ]);
+    
         const orders = orderRecords.map(OrderMapper.toDomain);
         return Promise.all(orders);
     }
